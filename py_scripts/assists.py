@@ -30,3 +30,4 @@ def check_folders(folder):
         os.makedirs(folder)
         msg = folder + " does not exist, making output folder"
         logging.info(msg)
+
