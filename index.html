@@ -22,7 +22,6 @@
         .logo {
             width: 215px;
             height: 87px;
-            /*margin-right: 20px;*/
             }
         
         .logo img {
@@ -92,6 +91,23 @@
             border: 1px black;
         }
 
+        .results {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            }
+
+        .right-content {
+            display: flex;
+            align-items: center;
+            }
+
+        .showAllButton,
+        .hideAllButton {
+            margin-left: 10px;
+            font-size: 10px;
+            }
+
         .accordion {
             background-color: white;
             color: rgb(48, 48, 48);
@@ -102,6 +118,7 @@
             border: none;
             outline: none;
             transition: 0.4s;
+            margin-left: 20px;
         }
 
         .active, .accordion:hover {
@@ -120,7 +137,12 @@
 
         .panel p {
             margin: 0;
+            margin-left: 10px;
+            margin-bottom: 10px;
+            margin-top: 5px;
             padding: 0;
+            font-size: 12px;
+            line-height: 1.5;
         }
 
         .accordion:after {
@@ -134,6 +156,11 @@
         .active:after {
             content: "\2796"; /* "minus" sign (-) */
         }
+
+        .disclaimer p {
+            font-size: 9px;
+        }
+        
     </style>
 </head>
 
@@ -190,14 +217,26 @@
             <br>
             <b><u>Results:</u></b>
         </p>
-    <div class="results">
-        <p>
+        <div class="results">
+        <div class="left-content">
+            <p>
             <b>Top 10 Species Detected</b>
-        </p>
+            </p>
+        </div>
+        <div class="right-content">
+            <div class="showAllButton">
+            <button id="showAllButton">Show All</button>
+            </div>
+            <div class="hideAllButton">
+            <button id="hideAllButton">Hide All</button>
+            </div>
+        </div>
+    </div>
+    <div class="results_accordion">
         <button class="accordion">py_species1_ph</button>
             <div class="panel">
                 <p>
-                    py_species1_ph is a py_species1status_ph
+                    py_species1_ph is py_species1status_ph
                 </p>
                 <p>
                     Detected Resistance Markers: py_species1res_ph
@@ -206,114 +245,114 @@
                     Detected Virulence Markers: py_species1vir_ph
                 </p>
             </div>
-            <button class="accordion">py_species2_ph</button>
-            <div class="panel">
-                <p>
-                    py_species2_ph is a py_species2status_ph
-                </p>
-                <p>
-                    Detected Resistance Markers: py_species2res_ph
-                </p>
-                <p>
-                    Detected Virulence Markers: py_species2vir_ph
-                </p>
-            </div>
-            <button class="accordion">py_species3_ph</button>
-            <div class="panel">
-                <p>
-                    py_species3_ph is a py_species3status_ph
-                </p>
-                <p>
-                    Detected Resistance Markers: py_species3res_ph
-                </p>
-                <p>
-                    Detected Virulence Markers: py_species3vir_ph
-                </p>
-            </div>
-            <button class="accordion">py_species4_ph</button>
-            <div class="panel">
-                <p>
-                    py_species4_ph is a py_species4status_ph
-                </p>
-                <p>
-                    Detected Resistance Markers: py_species4res_ph
-                </p>
-                <p>
-                    Detected Virulence Markers: py_species4vir_ph
-                </p>
-            </div>
-            <button class="accordion">py_species5_ph</button>
-            <div class="panel">
-                <p>
-                    py_species5_ph is a py_species5status_ph
-                </p>
-                <p>
-                    Detected Resistance Markers: py_species5res_ph
-                </p>
-                <p>
-                    Detected Virulence Markers: py_species5vir_ph
-                </p>
-            </div>
-            <button class="accordion">py_species6_ph</button>
-            <div class="panel">
-                <p>
-                    py_species6_ph is a py_species6status_ph
-                </p>
-                <p>
-                    Detected Resistance Markers: py_species6res_ph
-                </p>
-                <p>
-                    Detected Virulence Markers: py_species6vir_ph
-                </p>
-            </div>
-            <button class="accordion">py_species7_ph</button>
-            <div class="panel">
-                <p>
-                    py_species7_ph is a py_species7status_ph
-                </p>
-                <p>
-                    Detected Resistance Markers: py_species7res_ph
-                </p>
-                <p>
-                    Detected Virulence Markers: py_species7vir_ph
-                </p>
-            </div>
-            <button class="accordion">py_species8_ph</button>
-            <div class="panel">
-                <p>
-                    py_species8_ph is a py_species8status_ph
-                </p>
-                <p>
-                    Detected Resistance Markers: py_species8res_ph
-                </p>
-                <p>
-                    Detected Virulence Markers: py_species8vir_ph
-                </p>
-            </div>
-            <button class="accordion">py_species9_ph</button>
-            <div class="panel">
-                <p>
-                    py_species9_ph is a py_species9status_ph
-                </p>
-                <p>
-                    Detected Resistance Markers: py_species9res_ph
-                </p>
-                <p>
-                    Detected Virulence Markers: py_species9vir_ph
-                </p>
-            </div>
-            <button class="accordion">py_species10_ph</button>
-            <div class="panel">
-                <p>
-                    py_species10_ph is a py_species10status_ph
-                </p>
-                <p>
-                    Detected Resistance Markers: py_species10res_ph
-                </p>
-                <p>
-                    Detected Virulence Markers: py_species10vir_ph
-                </p>
-            </div>
+        <button class="accordion">py_species2_ph</button>
+        <div class="panel">
+            <p>
+                py_species2_ph is py_species2status_ph
+            </p>
+            <p>
+                Detected Resistance Markers: py_species2res_ph
+            </p>
+            <p>
+                Detected Virulence Markers: py_species2vir_ph
+            </p>
+        </div>
+        <button class="accordion">py_species3_ph</button>
+        <div class="panel">
+            <p>
+                py_species3_ph is py_species3status_ph
+            </p>
+            <p>
+                Detected Resistance Markers: py_species3res_ph
+            </p>
+            <p>
+                Detected Virulence Markers: py_species3vir_ph
+            </p>
+        </div>
+        <button class="accordion">py_species4_ph</button>
+        <div class="panel">
+            <p>
+                py_species4_ph is py_species4status_ph
+            </p>
+            <p>
+                Detected Resistance Markers: py_species4res_ph
+            </p>
+            <p>
+                Detected Virulence Markers: py_species4vir_ph
+            </p>
+        </div>
+        <button class="accordion">py_species5_ph</button>
+        <div class="panel">
+            <p>
+                py_species5_ph is py_species5status_ph
+            </p>
+            <p>
+                Detected Resistance Markers: py_species5res_ph
+            </p>
+            <p>
+                Detected Virulence Markers: py_species5vir_ph
+            </p>
+        </div>
+        <button class="accordion">py_species6_ph</button>
+        <div class="panel">
+            <p>
+                py_species6_ph is py_species6status_ph
+            </p>
+            <p>
+                Detected Resistance Markers: py_species6res_ph
+            </p>
+            <p>
+                Detected Virulence Markers: py_species6vir_ph
+            </p>
+        </div>
+        <button class="accordion">py_species7_ph</button>
+        <div class="panel">
+            <p>
+                py_species7_ph is py_species7status_ph
+            </p>
+            <p>
+                Detected Resistance Markers: py_species7res_ph
+            </p>
+            <p>
+                Detected Virulence Markers: py_species7vir_ph
+            </p>
+        </div>
+        <button class="accordion">py_species8_ph</button>
+        <div class="panel">
+            <p>
+                py_species8_ph is py_species8status_ph
+            </p>
+            <p>
+                Detected Resistance Markers: py_species8res_ph
+            </p>
+            <p>
+                Detected Virulence Markers: py_species8vir_ph
+            </p>
+        </div>
+        <button class="accordion">py_species9_ph</button>
+        <div class="panel">
+            <p>
+                py_species9_ph is py_species9status_ph
+            </p>
+            <p>
+                Detected Resistance Markers: py_species9res_ph
+            </p>
+            <p>
+                Detected Virulence Markers: py_species9vir_ph
+            </p>
+        </div>
+        <button class="accordion">py_species10_ph</button>
+        <div class="panel">
+            <p>
+                py_species10_ph is py_species10status_ph
+            </p>
+            <p>
+                Detected Resistance Markers: py_species10res_ph
+            </p>
+            <p>
+                Detected Virulence Markers: py_species10vir_ph
+            </p>
+        </div>
     </div>
 
     <div data-html2canvas-ignore="true" class="krona">
@@ -322,6 +361,12 @@
 
         </iframe>
     </div>
+    <div class="disclaimer">
+        <p>
+            <b>Disclaimer</b>: The results of this report are confidential and are not to be used or disclosed to any other person or used for any other purpose, unless that use is disclosed or the purpose is expressly authorized in writing by NSW Health Pathology or the named recipient on this report.
+        </p>
+    </div>
+
     <div data-html2canvas-ignore="true">
         <button id="savebutton">Save as PDF</button>
     </div>
@@ -346,18 +391,36 @@
     <script>
         var acc = document.getElementsByClassName("accordion");
         var i;
-        
+
         for (i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function() {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel.style.maxHeight) {
-                panel.style.maxHeight = null;
-                } else {
-                panel.style.maxHeight = panel.scrollHeight + "px";
+        acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+            panel.style.maxHeight = null;
+            } else {
+            panel.style.maxHeight = panel.scrollHeight + "px";
             }
         });
-    }
+        }
+
+        document.getElementById('showAllButton').addEventListener('click', function() {
+        var panels = document.getElementsByClassName('panel');
+        for (var j = 0; j < panels.length; j++) {
+            var panel = panels[j];
+            panel.style.maxHeight = panel.scrollHeight + "px";
+            panel.previousElementSibling.classList.add('active');
+        }
+        });
+
+        document.getElementById('hideAllButton').addEventListener('click', function() {
+        var panels = document.getElementsByClassName('panel');
+        for (var j = 0; j < panels.length; j++) {
+            var panel = panels[j];
+            panel.style.maxHeight = null;
+            panel.previousElementSibling.classList.remove('active');
+        }
+        });
     </script>
 </body>
 
