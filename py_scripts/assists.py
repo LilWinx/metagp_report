@@ -31,3 +31,21 @@ def check_folders(folder):
         msg = folder + " does not exist, making output folder"
         logging.info(msg)
 
+def check_input_folder(folder):
+    """
+    Check the input folder contains the correct number and types of files.
+    """
+    input_files = os.listdir(folder)
+    count_input = len(input_files)
+    if count_input > 3:
+        logging.critical(f"There more than the expected number of files in {folder}, please double check")
+        sys.exit(1)
+    for file in input_files:
+        if file.endswith(".html") or file.endswith(".txt"):
+            check_files(os.path.join(folder, file))
+        else:
+            logging.critical(f"Invalid file type detected please check or remove")
+            sys.exit(1)
+    return input_files
+    
+        
