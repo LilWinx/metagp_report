@@ -35,9 +35,12 @@ def check_input_folder(folder):
     """
     Check the input folder contains the correct number and types of files.
     """
-    input_files = os.listdir(folder)
+    input_files = []
+    for file in os.listdir(folder):
+        if not file.startswith("."):
+            input_files.append(file)
     count_input = len(input_files)
-    if count_input > 4:
+    if count_input > 6:
         logging.critical(f"There more than the expected number of files in {folder}, please double check")
         sys.exit(1)
     for file in input_files:

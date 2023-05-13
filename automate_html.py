@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import argparse
 import logging
@@ -45,10 +46,6 @@ def main():
     output_file = os.path.join(outdir, "report.html")
     assists.check_folders(outdir)
 
-    iframe_krona = args.krona
-    assists.check_files(iframe_krona)
-    base64_krona = base64_encode.html_base64_encode(iframe_krona)
-
     if args.manual != True and args.input is None:
         assists.check_files(args.txt)
         inputs = data_input.auto_txt_input(args.txt)
@@ -61,12 +58,21 @@ def main():
             elif file.endswith("sp.txt"):
                 species_details = open(os.path.join(args.input, file), 'r')
                 species_list = species_details.readlines()
+            elif file.endswith("ri.txt"):
+                ri_details = open(os.path.join(args.input, file), 'r')
+                ri_list = ri_details.readlines()
+                pass
             elif file.endswith("krona.html"):
                 iframe_krona = os.path.join(args.input, file)
                 base64_krona = base64_encode.html_base64_encode(iframe_krona)
-            elif file.endswith(".png"):
+            elif file.endswith("_coverageplot.png"):
                 coverage_png = os.path.join(args.input, file)
                 base64_cov_png = base64_encode.html_base64_encode(coverage_png)
+                match = re.search(".*_([A-Z]+_[A-Z0-9]+.*[0-9]*)_.*", file) # thx jake "_".join(file.split("_")[1:3])
+                used_reference = match.group(1)
+            elif file.endswith("_contigsplot.png"):
+                contigs_png = os.path.join(args.input, file)
+                base64_contigs_png = base64_encode.html_base64_encode(contigs_png)
         inputs = data_input.auto_txt_input(patient_txt)
         db_accordion = pathogen_db_search.pathogen_search(species_list)
 
@@ -75,9 +81,10 @@ def main():
     
     img_logo = os.path.join(os.path.dirname(__file__), "assets/nswhp-logo.png")
     base64_logo_png = base64_encode.html_base64_encode(img_logo)
-    
+
     replace_dict = {
         "py_logo_ph": base64_logo_png,
+        "py_finalpathref_ph": used_reference,
         "py_pn_ph": inputs.pn,
         "py_mrn_ph": inputs.mrn,
         "py_acc_ph": inputs.accession,
@@ -88,6 +95,7 @@ def main():
         "py_wgsid_ph": inputs.wgsid,
         "py_krona_ph": base64_krona,
         "py_coverageimg_ph": base64_cov_png,
+        "py_contigsimg_ph": base64_contigs_png,
     }
 
     replace_dict.update(db_accordion)

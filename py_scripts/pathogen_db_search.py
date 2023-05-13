@@ -3,18 +3,19 @@ import logging
 import pandas as pd
 import numpy as np
 
-species_dict = {}
-status_dict = {}
 def pathogen_search(species_list):
     """
     Fill in information for the accordion, using the input file.
     """
+    species_dict = {}
+    status_dict = {}    
     species_list = list(map(lambda x:x.strip("\n"), species_list))
     pathogen_db = pd.read_csv(os.path.join(os.path.dirname(os.path.dirname(__file__)), "database/pathogen_list.csv"), header = 0)
+    logging.info("Reading Pathogen_List database to fill the species list with metadata")
     for i, species in enumerate(species_list, start = 1):
         match_species = pathogen_db[(pathogen_db['Species'] == species) | (pathogen_db['AltNames'] == species)]
         if not match_species.empty:
-            status = match_species.iloc[0]['Status']
+            status = "a " + match_species.iloc[0]['Status']
             additions = []
             if not pd.isnull(match_species.iloc[0]['Disease_type']):
                 additions.append(" causing a " + str(match_species.iloc[0]['Disease_type']) + " infection")
