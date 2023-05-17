@@ -1,5 +1,6 @@
 list.of.packages <- c(
-  "ggplot2", 
+  "ggplot2",
+  "tidyverse",
   "ivs", 
   "patchwork", 
   "purrr", 
@@ -8,9 +9,12 @@ list.of.packages <- c(
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
+library(ggplot2)
+library(tidyverse)
 library(ivs)
 library(patchwork)
 library(purrr)
+library(grid)
 
 # written by Carl Suster @arcesu
 
@@ -42,7 +46,7 @@ binned_cov <- tibble(
 # draw coverage plot
 p1 <-
   binned_cov %>%
-  # cov %>%
+  #cov %>% # switch to this for no bin!
   ggplot(aes(x=Position, y=Coverage)) +
   geom_col(fill="skyblue") +
   labs(

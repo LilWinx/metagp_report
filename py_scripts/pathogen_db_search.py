@@ -15,7 +15,7 @@ def pathogen_search(species_list):
     for i, species in enumerate(species_list, start = 1):
         match_species = pathogen_db[(pathogen_db['Species'] == species) | (pathogen_db['AltNames'] == species)]
         if not match_species.empty:
-            status = "a " + match_species.iloc[0]['Status']
+            status = match_species.iloc[0]['Status']
             additions = []
             if not pd.isnull(match_species.iloc[0]['Disease_type']):
                 additions.append(" causing a " + str(match_species.iloc[0]['Disease_type']) + " infection")

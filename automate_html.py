@@ -70,9 +70,6 @@ def main():
                 base64_cov_png = base64_encode.html_base64_encode(coverage_png)
                 match = re.search(".*_([A-Z]+_[A-Z0-9]+.*[0-9]*)_.*", file) # thx jake "_".join(file.split("_")[1:3])
                 used_reference = match.group(1)
-            elif file.endswith("_contigsplot.png"):
-                contigs_png = os.path.join(args.input, file)
-                base64_contigs_png = base64_encode.html_base64_encode(contigs_png)
         inputs = data_input.auto_txt_input(patient_txt)
         db_accordion = pathogen_db_search.pathogen_search(species_list)
 
@@ -95,7 +92,6 @@ def main():
         "py_wgsid_ph": inputs.wgsid,
         "py_krona_ph": base64_krona,
         "py_coverageimg_ph": base64_cov_png,
-        "py_contigsimg_ph": base64_contigs_png,
     }
 
     replace_dict.update(db_accordion)
