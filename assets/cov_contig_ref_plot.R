@@ -54,7 +54,6 @@ p1 <-
   ggplot(aes(x=Position, y=Coverage)) +
   geom_col(fill="#5D3A9B") +
   labs(
-    title = "Test",
     x = NULL,
     y = "Fold10 Coverage"
   ) +
