@@ -7,24 +7,13 @@ import warnings
 from py_scripts import arguments
 from py_scripts import assists
 from py_scripts import base64_encode
-from py_scripts import data_input
 from py_scripts import pathogen_db_search
+from py_scripts import result_interpret
 
 __version__ = "0.0.1"
 logging.getLogger().setLevel(logging.INFO)
 warnings.simplefilter(action="ignore", category=FutureWarning)
 logging.basicConfig(level=logging.INFO, format="Meta-GP Report:%(levelname)s:%(asctime)s: %(message)s", datefmt="%y/%m/%d %I:%M:%S %p")
-
-class Inputs:
-    def __init__(self, pn, mrn, accession, doc, seqdate, runname, repdate, wgsid):
-        self.pn = pn
-        self.mrn = mrn
-        self.accession = accession
-        self.doc = doc
-        self.seqdate = seqdate
-        self.runname = runname
-        self.repdate = repdate
-        self.wgsid = wgsid
 
 def main():
     parser = arguments.create_parser()  # pylint: disable=E1101
@@ -46,61 +35,46 @@ def main():
     output_file = os.path.join(outdir, "report.html")
     assists.check_folders(outdir)
 
-    if args.manual != True and args.input is None:
-        assists.check_files(args.txt)
-        inputs = data_input.auto_txt_input(args.txt)
-    elif args.input is not None:
-        assists.check_folders(args.input)
-        file_list = assists.check_input_folder(args.input)
-        for file in file_list:
-            if file.endswith("pt.txt"):
-                patient_txt = os.path.join(args.input, file)
-            elif file.endswith("sp.txt"):
-                species_details = open(os.path.join(args.input, file), 'r')
-                species_list = species_details.readlines()
-            elif file.endswith("ri.txt"):
-                ri_details = open(os.path.join(args.input, file), 'r')
-                ri_list = ri_details.readlines()
-                pass
-            elif file.endswith("krona.html"):
-                iframe_krona = os.path.join(args.input, file)
-                base64_krona = base64_encode.html_base64_encode(iframe_krona)
-            elif file.endswith("_coverageplot.png"):
-                coverage_png = os.path.join(args.input, file)
-                base64_cov_png = base64_encode.html_base64_encode(coverage_png)
-                match = re.search(".*_([A-Z]+_[A-Z0-9]+.*[0-9]*)_.*", file) # thx jake "_".join(file.split("_")[1:3])
-                used_reference = match.group(1)
-        inputs = data_input.auto_txt_input(patient_txt)
-        db_accordion = pathogen_db_search.pathogen_search(species_list)
+    assists.check_folders(args.input)
+    file_list = assists.check_input_folder(args.input)
+    for file in file_list:
+        if file.startswith("MetaGPReports") and file.endswith(".csv"):
+            patient_data = result_interpret.clinican_results(os.path.join(args.input, file), args.mrn)
+        elif file.endswith("sp.txt"):
+            species_list = result_interpret.species_list(os.path.join(args.input, file))
+        elif file.endswith("krona.html"):
+            iframe_krona = os.path.join(args.input, file)
+            base64_krona = base64_encode.html_base64_encode(iframe_krona)
+        elif file.endswith("_coverageplot.png"):
+            coverage_png = os.path.join(args.input, file)
+            base64_cov_png = base64_encode.html_base64_encode(coverage_png)
+            match = re.search(".*_([A-Z]+_[A-Z0-9]+.*[0-9]*)_.*", file) # thx jake "_".join(file.split("_")[1:3])
+            used_reference = match.group(1)
+        elif file.endswith("_hbar.png"):
+            hbar_png = os.path.join(args.input, file)
+            base64_hbar_png = base64_encode.html_base64_encode(hbar_png)
+    db_accordion = pathogen_db_search.pathogen_search(species_list)
 
-    else:
-        inputs = data_input.manual_input()
-    
     img_logo = os.path.join(os.path.dirname(__file__), "assets/nswhp-logo.png")
     base64_logo_png = base64_encode.html_base64_encode(img_logo)
 
     replace_dict = {
         "py_logo_ph": base64_logo_png,
         "py_finalpathref_ph": used_reference,
-        "py_pn_ph": inputs.pn,
-        "py_mrn_ph": inputs.mrn,
-        "py_acc_ph": inputs.accession,
-        "py_doc_ph": inputs.doc,
-        "py_seqdate_ph": inputs.seqdate,
-        "py_rundate_ph": inputs.runname,
-        "py_repdate_ph": inputs.repdate,
-        "py_wgsid_ph": inputs.wgsid,
         "py_krona_ph": base64_krona,
         "py_coverageimg_ph": base64_cov_png,
+        "py_hbar_ph": base64_hbar_png
     }
+    dictionary_list = [patient_data, db_accordion]
+    for dictionary in dictionary_list:
+        replace_dict.update(dictionary)
 
-    replace_dict.update(db_accordion)
     with open(template_html, "r") as html_template:
         template = html_template.read()
 
     for key, value in replace_dict.items():
         logging.info(f"Replacing {key} to {value} in the HTML")
-        template = template.replace(key, value)
+        template = template.replace(key, str(value))
 
     with open(output_file, "w") as outfile:
         outfile.write(template)

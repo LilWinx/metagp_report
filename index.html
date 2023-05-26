@@ -49,6 +49,7 @@
             text-align: center;
             font-size:25px;
             }
+
         .title button {
             max-width: 210mm;
             margin: 0 auto;
@@ -98,14 +99,14 @@
             justify-content: space-between;
             }
 
-        .coverage_img {
+        .centre_img {
             width: 100%;
             height: 100%;
             display: flex;
             align-items: center;
         }
 
-        .coverage_img img {
+        .centre_img img {
             margin-left: 5%;
             width: 90%;
             height: 25%;
@@ -113,7 +114,7 @@
         
         .right-content {
             display: flex;
-            align-items: center;
+            justify-content: flex-end;
             }
 
         .showAllButton,
@@ -205,10 +206,16 @@
                     <td>py_doc_ph</td>
                 </tr>
                 <tr>
+                    <td style="padding-right: 30px;"><b>Date of Birth</b></td>
+                    <td style="padding-right: 100px;">py_dob_ph</td>
+                    <td style="padding-right: 30px;"><b>Request Date:</b></td>
+                    <td>py_reqdate_ph</td>
+                </tr>
+                <tr>
                     <td style="padding-right: 30px;"><b>Sequence Date:</b></td>
                     <td style="padding-right: 100px;">py_seqdate_ph</td>
                     <td style="padding-right: 30px;"><b>Run Name:</b></td>
-                    <td>py_rundate_ph</td>
+                    <td>py_runname_ph</td>
                 </tr>
                 <tr>
                     <td style="padding-right: 30px;"><b>Date of Report:</b></td>
@@ -220,40 +227,73 @@
         </table>
         <hr/>
     </div>
+    <div>
+        <p style="font-size: 14px";>
+            <b><u>Clinical Request Information:</u></b>
+            <br>
+        </p>
+    </div>
     <div class="textzone">
         <p>
-            <b>Interpretation:</b>
-            Inconclusive or Detected Pathogen: py_finalpathogen_ph <br>
+            <b>Suspected Pathogen:</b>
+            py_suspathogen_ph <br>
             <br>
-            <b>Reason:</b>
-            Full genome of py_finalpathogen_ph Detected <br>
+            <b>Sample Type:</b>
+            py_sampletype_ph <br>
+            <br>
+            <b>Clinician Comments:</b>
+            py_clincomm_ph <br>
+            <br>
+        </p>
+    </div>
+    <div>
+        <p style="font-size: 14px";>
+            <b><u>Metagenomics Summary:</u></b>
+            <br>
+        </p>
+    </div>
+    <div class="textzone">
+        <b>Interpretation:</b>
+            py_riinterpret_ph <br>
+            <br>
+        <b>Reason:</b>
+            py_rireason_ph
+            <br>
         </p>
         <p style="padding-left: 10px; font-size: 12px">
             <b>Figure 1:</b> Whole genome coverage map of sequencing reads to py_finalpathogen_ph using Genbank Accession (py_finalpathref_ph).
         </p>
-        <div class="coverage_img">
+        <div class="centre_img">
             <img src="data:image/png;base64, py_coverageimg_ph">
             <br>
         </div>
         <div>
-            <p>
+            <p style="font-size: 14px";>
                 <b><u>Results:</u></b>
                 <br>
             </p>
         </div>
         <div class="results">
-            <div class="left-content">
-                <p>
-                    <b>Top 10 Species Detected</b>
-                </p>
-            </div>
-            <div class="right-content">
-                <div data-html2canvas-ignore="true" class="showAllButton">
+            <p>
+                <b>Top 10 Species Detected</b>
+            </p>
+        </div>
+        
+        <div>
+            <p style="padding-left: 10px; font-size: 12px">
+                <b>Figure 2:</b> Relative abundance of the Top 10 species.
+            </p>
+            <br>
+            <img src="data:image/png;base64, py_hbar_ph" class="centre_img">
+            <br>      
+        </div>
+        <div class="right-content">
+            <div data-html2canvas-ignore="true" class="showAllButton">
                 <button id="showAllButton">Show All</button>
-                </div>
-                <div data-html2canvas-ignore="true" class="hideAllButton">
+            </div>
+            <div data-html2canvas-ignore="true" class="hideAllButton">
                 <button id="hideAllButton">Hide All</button>
-                </div>
+            </div>
         </div>
     </div>
     <div class="results_accordion">
