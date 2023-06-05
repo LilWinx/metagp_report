@@ -22,7 +22,11 @@ def pathogen_search(species_list):
             if not pd.isnull(match_species.iloc[0]['Disease_Name']):
                 additions.append(" called " + str(match_species.iloc[0]['Disease_Name']))
             if not pd.isnull(match_species.iloc[0]['Commensal']):
-                additions.append(". " + match_species.iloc[0]['Species'] + " is a commensal microbe")
+                commensal_locations = match_species.iloc[0]['Commensal'].split('; ')
+                if len(commensal_locations) > 1:
+                    commensal_locations[-2] += " and " + commensal_locations[-1]
+                    commensal_locations = commensal_locations[:-1]
+                additions.append(". " + match_species.iloc[0]['Species'] + " is a commensal microbe found in the " + ', '.join(commensal_locations))
             if not pd.isnull(match_species.iloc[0]['NNDSS_Notifiable']):
                 additions.append(", it is also a notifiable disease in NSW")
             if additions:
