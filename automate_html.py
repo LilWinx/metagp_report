@@ -55,13 +55,14 @@ def main():
             base64_hbar_png = base64_encode.html_base64_encode(hbar_png)
     db_accordion = pathogen_db_search.pathogen_search(species_list)
 
-    #img_logo = os.path.join(os.path.dirname(__file__), "assets/nswhp-logo.png")
-    img_logo = os.path.join(os.path.dirname(__file__), "assets/metagp-logo.png")
+    img_logo = os.path.join(os.path.dirname(__file__), "assets/nswhp-logo.png")
+    mgimg_logo = os.path.join(os.path.dirname(__file__), "assets/metagp-logo.png")
     base64_logo_png = base64_encode.html_base64_encode(img_logo)
+    base64_metagp = base64_encode.html_base64_encode(mgimg_logo)
 
     replace_dict = {
         "py_logo_ph": base64_logo_png,
-        #"py_metagplogo_ph": base64_metagp
+        "py_metagplogo_ph": base64_metagp,
         "py_finalpathref_ph": used_reference,
         "py_krona_ph": base64_krona,
         "py_coverageimg_ph": base64_cov_png,
