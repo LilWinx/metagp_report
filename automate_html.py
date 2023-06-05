@@ -38,8 +38,8 @@ def main():
     assists.check_folders(args.input)
     file_list = assists.check_input_folder(args.input)
     for file in file_list:
-        if file.startswith("MetaGPReports") and file.endswith(".csv"):
-            patient_data = result_interpret.clinican_results(os.path.join(args.input, file), args.mrn)
+        if file.startswith("TestProjectWinkieFon") and file.endswith(".csv"):
+            patient_data = result_interpret.clinican_results(os.path.join(args.input, file), args.wgsid)
         elif file.endswith("sp.txt"):
             species_list = result_interpret.species_list(os.path.join(args.input, file))
         elif file.endswith("krona.html"):
@@ -55,11 +55,13 @@ def main():
             base64_hbar_png = base64_encode.html_base64_encode(hbar_png)
     db_accordion = pathogen_db_search.pathogen_search(species_list)
 
-    img_logo = os.path.join(os.path.dirname(__file__), "assets/nswhp-logo.png")
+    #img_logo = os.path.join(os.path.dirname(__file__), "assets/nswhp-logo.png")
+    img_logo = os.path.join(os.path.dirname(__file__), "assets/metagp-logo.png")
     base64_logo_png = base64_encode.html_base64_encode(img_logo)
 
     replace_dict = {
         "py_logo_ph": base64_logo_png,
+        #"py_metagplogo_ph": base64_metagp
         "py_finalpathref_ph": used_reference,
         "py_krona_ph": base64_krona,
         "py_coverageimg_ph": base64_cov_png,
@@ -68,7 +70,7 @@ def main():
     dictionary_list = [patient_data, db_accordion]
     for dictionary in dictionary_list:
         replace_dict.update(dictionary)
-
+    print(replace_dict)
     with open(template_html, "r") as html_template:
         template = html_template.read()
 
