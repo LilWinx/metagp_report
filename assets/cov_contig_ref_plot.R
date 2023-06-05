@@ -57,13 +57,22 @@ p1 <-
     x = NULL,
     y = "Fold10 Coverage"
   ) +
-  theme(
-    plot.title = element_text(size = 20),
-    axis.title = element_text(size = 8)
-  ) +
+  theme_classic() +
   scale_x_continuous(labels = scales::comma, limits = c(1, max(cov$Position, merged_df$end))) +
-  scale_y_continuous(trans='log10') +
-  theme_classic()
+  scale_y_continuous(trans='log10') + 
+  theme(
+    axis.title = element_text(size = 8),
+    panel.background = element_rect(fill = "transparent",
+                                    colour = NA_character_), # necessary to avoid drawing panel outline
+    panel.grid.major = element_blank(), # get rid of major grid
+    panel.grid.minor = element_blank(), # get rid of minor grid
+    plot.background = element_rect(fill = "transparent",
+                                   colour = NA_character_), # necessary to avoid drawing plot outline
+    legend.background = element_rect(fill = "transparent", color = NA),
+    legend.box.background = element_rect(fill = "transparent", color = NA),
+    legend.key = element_rect(fill = "transparent", color = NA)
+  )
+
 
 # draw contigs plot
 p2 <- 
@@ -76,10 +85,24 @@ p2 <-
   ) +
   scale_x_continuous(labels = NULL, limits = c(1, max(cov$Position, merged_df$end))) +
   scale_y_continuous(labels = NULL) +
-  theme_void()
+  theme_void() +
+  theme(panel.background = element_rect(fill = "transparent",
+                                            colour = NA_character_), # necessary to avoid drawing panel outline
+        panel.grid.major = element_blank(), # get rid of major grid
+        panel.grid.minor = element_blank(), # get rid of minor grid
+        plot.background = element_rect(fill = "transparent",
+                                       colour = NA_character_), # necessary to avoid drawing plot outline
+        legend.background = element_rect(fill = "transparent", color = NA),
+        legend.box.background = element_rect(fill = "transparent", color = NA),
+        legend.key = element_rect(fill = "transparent", color = NA)
+  )
 
 # combine plots
-p1 / p2 + plot_layout(ncol = 1, heights = c(10, 1))
+p1 / p2 + 
+  plot_layout(ncol = 1, heights = c(10, 1)) + 
+  plot_annotation(theme = theme(
+    plot.background = element_rect(fill = "transparent", color = NA)
+    ))
 
 # save!
 ggsave(outname,
@@ -87,4 +110,5 @@ ggsave(outname,
        height = 500,
        units = "px",
        dpi = 300,
-       scale = 2)
+       scale = 2,
+       bg = "transparent")
