@@ -55,14 +55,29 @@ def main():
             base64_hbar_png = base64_encode.html_base64_encode(hbar_png)
     db_accordion = pathogen_db_search.pathogen_search(species_list)
 
-    img_logo = os.path.join(os.path.dirname(__file__), "assets/nswhp-logo.png")
-    mgimg_logo = os.path.join(os.path.dirname(__file__), "assets/metagp-logo.png")
-    base64_logo_png = base64_encode.html_base64_encode(img_logo)
-    base64_metagp = base64_encode.html_base64_encode(mgimg_logo)
+    # base64 encode all set images
+    img_names = ["nswhp-logo.png", 
+                 "metagp-logo.png", 
+                 "bacteria.png", 
+                 "virus.png", 
+                 "fungi.png", 
+                 "parasite.png"]
+    base64_images = []
+
+    for img in img_names:
+        img_path = os.path.join(os.path.dirname(__file__), "assets", img)
+        base64_image = base64_encode.html_base64_encode(img_path)
+        variable_name = "base64_" + os.path.splitext(img)[0]
+        locals()[variable_name] = base64_image
+        base64_images.append(variable_name)
 
     replace_dict = {
-        "py_logo_ph": base64_logo_png,
-        "py_metagplogo_ph": base64_metagp,
+        "py_logo_ph": locals()[base64_images[0]],
+        "py_metagplogo_ph": locals()[base64_images[1]],
+        "py_bacteria_icon_ph": locals()[base64_images[2]],
+        "py_virus_icon_ph": locals()[base64_images[3]],
+        "py_fungi_icon_ph": locals()[base64_images[4]],
+        "py_parasite_icon_ph": locals()[base64_images[5]],
         "py_finalpathref_ph": used_reference,
         "py_krona_ph": base64_krona,
         "py_coverageimg_ph": base64_cov_png,
