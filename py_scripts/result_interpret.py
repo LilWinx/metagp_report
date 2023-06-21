@@ -28,27 +28,14 @@ def clinican_results(file, wgsid):
         "wgs_id": "py_wgsid_ph",
         "comments": "py_clincomm_ph",
         "sus_pathogen": "py_suspathogen_ph",
-        "sample_type": "py_sampletype_ph",
+        "fin_sample_type": "py_sampletype_ph",
         "na_type": "py_natype_ph",
         "ext_kit": "py_extkit_ph",
         "library_prep": "py_libraryprep_ph",
         "seq_platform": "py_seqplatform_ph",
-    }
-
-    sample_type_dict = {
-        1.0: "Whole Blood",
-        2.0: "Serum",
-        3.0: "Plasma",
-        4.0: "CSF",
-        5.0: "Nasopharyngeal Aspirate",
-        6.0: "Nasopharyngeal Swab",
-        7.0: "Saliva",
-        8.0: "Urine",
-        9.0: "Stool",
-        10.0: "Rectal Swab",
-        11.0: "Sputum", 
-        12.0: "Oral swab",
-        13.0: "Wound Swab",
+        "final_result": "py_finalpathogen_ph",
+        "binf_interpretation": "py_riinterpret_ph",
+        "binf_reason": "py_rireason_ph",
     }
 
     na_type_dict = {
@@ -69,6 +56,7 @@ def clinican_results(file, wgsid):
         2.0: "Illumina Nextera DNA Library Preparation Kit",
         3.0: "Twist Comprehensive Panel",
         4.0: "ONT Rapid Barcoding Kit",
+        5.0: "RAPIDPrep Protocol"
     }
 
     seq_platorm_dict = {
@@ -91,8 +79,7 @@ def clinican_results(file, wgsid):
     combined_pt['pn'] = combined_pt['first_name'] + ' ' + combined_pt['last_name'] # combine first and last name for patient name
     combined_pt['dobage'] = combined_pt['dob'] + ' (' + str(combined_pt['age'][0]) + " y/o)" # combine dob & age
     #MAP TIME
-    map_dict = {'sample_type': sample_type_dict,
-                'na_type': na_type_dict, 
+    map_dict = {'na_type': na_type_dict, 
                 'ext_kit': extraction_kit_dict, 
                 'library_prep': library_prep_dict,
                 'seq_platform': seq_platorm_dict,
@@ -102,8 +89,6 @@ def clinican_results(file, wgsid):
         combined_pt[key] = combined_pt[key].map(value)
     
     # return to regularly scheduled programming
-    null_mask = combined_pt['sample_type'].isnull() # if sample_type is null, then use other.
-    combined_pt.loc[null_mask, 'sample_type'] = combined_pt.loc[null_mask, 'sample_other']
     clean_pt_data = combined_pt.drop(columns=[col for col in combined_pt.columns if col not in ph_dictionary.keys()]) # drop unnecessary columns not needed in report
     clean_pt_data['mrn'] = clean_pt_data["mrn"].astype('int64')
     row = clean_pt_data.iloc[0]
