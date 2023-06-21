@@ -50,9 +50,22 @@ def main():
             base64_cov_png = base64_encode.html_base64_encode(coverage_png)
             match = re.search(".*_([A-Z]+_[A-Z0-9]+.*[0-9]*)_.*", file) # thx jake "_".join(file.split("_")[1:3])
             used_reference = match.group(1)
+            div_base64_cov_png = f'''
+                <div class="coverage_plot">
+                    <p style="padding-left: 10px; font-size: 12px">
+                        <b>Figure 1:</b> Whole genome coverage map of sequencing reads to {used_reference}.
+                    </p>
+                    <div class="centre_img">
+                        <img src="data:image/png;base64, {base64_cov_png}">
+                        <br>
+                    </div>
+                </div>
+            '''
         elif file.endswith("_hbar.png"):
             hbar_png = os.path.join(args.input, file)
             base64_hbar_png = base64_encode.html_base64_encode(hbar_png)
+        else:
+            div_base64_cov_png = ""
     db_accordion = pathogen_db_search.pathogen_search(species_list)
 
     # base64 encode all set images
@@ -78,9 +91,8 @@ def main():
         "py_virus_icon_ph": locals()[base64_images[3]],
         "py_fungi_icon_ph": locals()[base64_images[4]],
         "py_parasite_icon_ph": locals()[base64_images[5]],
-        "py_finalpathref_ph": used_reference,
         "py_krona_ph": base64_krona,
-        "py_coverageimg_ph": base64_cov_png,
+        "py_coverageimg_ph": div_base64_cov_png,
         "py_hbar_ph": base64_hbar_png
     }
     dictionary_list = [patient_data, db_accordion]

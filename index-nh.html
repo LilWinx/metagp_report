@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+<head>
+    <title>Meta-GP Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        * {
+            letter-spacing: 0.01px;
+            font-family: Arial;
+        }
+        
+        body {
+            margin-left: 30px;
+            margin-right: 30px;
+        }
+
+        .letterhead {
+            display: flex;
+            align-items: center;
+            }
+        
+        .logo {
+            width: 215px;
+            height: 87px;
+            }
+        
+        .logo img,
+        .centre_logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            }
+        
+        .centre_logo {
+            height: 60px;
+            display: flex;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            }
+
+        .address {
+            flex-grow: 1;
+            flex-shrink: 0;
+            font-size: 10px;
+            line-height: 0.8;
+            }
+        
+        .address p {
+            margin: 0;
+            padding: 0;
+            text-align: right;
+            }
+        
+        .title p {
+            max-width: 210mm;
+            margin: 0 auto;
+            text-align: center;
+            font-size:25px;
+            }
+
+        .title button {
+            max-width: 210mm;
+            margin: 0 auto;
+            text-align:right;
+        }
+
+        .patient_table {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 15vh;
+        }
+        
+        table {
+            border-collapse: collapse;
+        }
+        
+        td {
+            padding: 1px;
+            font-size:12px;
+            text-align: left;
+            border: 1px white;
+        }
+
+        .textzone {
+            font-size:14px;
+            text-align: left;
+        }
+
+        .results p {
+            font-size:12px;
+            text-align: left;
+        }
+        .krona {
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        .krona iframe{
+            width: 100%;
+            height: 750px; /* set the height of the iframe */
+            border: 1px black;
+        }
+
+        .results {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            }
+
+        .centre_img {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .centre_img img {
+            margin-left: 5%;
+            width: 90%;
+            height: 25%;
+            }
+        
+        .right-content {
+            display: flex;
+            justify-content: flex-end;
+            }
+
+        .showAllButton,
+        .hideAllButton {
+            margin-left: 10px;
+            font-size: 10px;
+            }
+        
+        .tab_bar {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .tab-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            padding: 5px 5px;
+            color: #000;
+            background-color: #fff;
+            box-shadow: 0 10px 10px rgba(0, 0, 0, 0.4);
+            font-size: 14px;
+        }
+
+        .tab-link.active-tab {
+            background-color: #c0c0c0; 
+            color: black;
+        }       
+
+        .tab-link img {
+            width: 25px;
+            height: 20px;
+            padding-right: 5px;
+        }
+
+        .tab {
+            display: none;
+        }
+
+        .accordion {
+            background-color: rgb(248, 247, 247);
+            color: rgb(48, 48, 48);
+            cursor: pointer;
+            padding: 5px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: 0.4s;
+        }
+
+        .panel {
+            padding: 0 10px;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            line-height: 2;
+            margin-right: 10px;
+        }
+
+        .panel p {
+            margin: 0;
+            margin-bottom: 10px;
+            margin-top: 5px;
+            padding: 0;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .accordion:after {
+            content: '\02795'; /* plus" sign (+) */
+            font-size: 13px;
+            color: #777;
+            float: right;
+            margin-left: 10px;
+        }
+
+        .active-accordion:after {
+            content: "\2796"; /* "minus" sign (-) */
+        }
+
+        .disclaimer p {
+            font-size: 9px;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <header class="letterhead" id="letterhead">
+        <div class="logo">
+            <img src="data:image/png;base64, py_logo_ph">
+        </div>
+        <div class="centre_logo">
+            <img src="data:image/png;base64, py_metagplogo_ph">
+        </div>
+        <div class="address">
+            <p>Centre for Infectious Diseases and Microbiology Laboratory Services</p><br>
+            <p>Level 3, NSW Health Pathology, ICPMR, Westmead Hospital</p><br>
+            <p>Westmead, NSW, 2145, Australia</p><br>
+        </div>
+    </header>
+    <div class="title" id="title">
+        <p>Metagenomics Report</p>
+        <table class="patient_table">
+            <tbody>
+                <tr>
+                    <td style="padding-right: 30px;"><b>Patient Name:</b></td>
+                    <td style="padding-right: 100px;">py_pn_ph</td>
+                    <td style="padding-right: 30px;"><b>MRN:</b></td>
+                    <td>py_mrn_ph</td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 30px;"><b>Accession:</b></td>
+                    <td style="padding-right: 100px;">py_acc_ph</td>
+                    <td style="padding-right: 30px;"><b>Date of Collection:</b></td>
+                    <td>py_doc_ph</td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 30px;"><b>Date of Birth</b></td>
+                    <td style="padding-right: 100px;">py_dob_ph</td>
+                    <td style="padding-right: 30px;"><b>Request Date:</b></td>
+                    <td>py_reqdate_ph</td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 30px;"><b>Sequence Date:</b></td>
+                    <td style="padding-right: 100px;">py_seqdate_ph</td>
+                    <td style="padding-right: 30px;"><b>Run Name:</b></td>
+                    <td>py_runname_ph</td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 30px;"><b>Date of Report:</b></td>
+                    <td style="padding-right: 100px;">py_repdate_ph</td>
+                    <td style="padding-right: 30px;"><b>WGS_ID:</b></td>
+                    <td>py_wgsid_ph</td>
+                </tr>
+            </tbody>
+        </table>
+        <hr/>
+    </div>
+    <div>
+        <p style="font-size: 14px";>
+            <b><u>Clinical Request Information:</u></b>
+            <br>
+        </p>
+    </div>
+    <div class="textzone">
+        <p>
+            <b>Suspected Pathogen:</b>
+            py_suspathogen_ph <br>
+            <br>
+            <b>Sample Type:</b>
+            py_sampletype_ph <br>
+            <br>
+            <b>Clinician Comments:</b>
+            py_clincomm_ph <br>
+            <br>
+        </p>
+    </div>
+    <div>
+        <p style="font-size: 14px";>
+            <b><u>Metagenomics Summary:</u></b>
+            <br>
+        </p>
+    </div>
+    <div class="textzone">
+        <p>
+            <b>Interpretation:</b>
+                py_riinterpret_ph <br>
+                <br>
+            <b>Reason:</b>
+                py_rireason_ph
+                <br>
+        </p>
+        <p style="padding-left: 10px; font-size: 12px">
+            <b>Figure 1:</b> Whole genome coverage map of sequencing reads to py_finalpathogen_ph using Genbank Accession (py_finalpathref_ph).
+        </p>
+        <div class="centre_img">
+            <img src="data:image/png;base64, py_coverageimg_ph">
+            <br>
+        </div>
+        <div>
+            <p style="font-size: 14px";>
+                <b><u>Results:</u></b>
+                <br>
+            </p>
+        </div>
+        <div class="results">
+            <p>
+                <b>Top 10 Species Detected</b>
+            </p>
+        </div>
+        
+        <div>
+            <p style="padding-left: 10px; font-size: 12px">
+                <b>Figure 2:</b> Relative abundance of the Top 10 species.
+            </p>
+            <br>
+            <img src="data:image/png;base64, py_hbar_ph" class="centre_img">
+            <br>      
+        </div>
+        <div class="right-content">
+            <div data-html2canvas-ignore="true" class="showAllButton">
+                <button id="showAllButton">Show All</button>
+            </div>
+            <div data-html2canvas-ignore="true" class="hideAllButton">
+                <button id="hideAllButton">Hide All</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab_bar">
+        <button class="tab-link" onclick="openTab(event, 'bacteria_tab')">
+            <img src="data:image/png;base64, py_bacteria_icon_ph" alt="Bacteria Icon">
+            Bacteria
+        </button>
+        <button class="tab-link" onclick="openTab(event, 'virus_tab')">
+            <img src="data:image/png;base64, py_virus_icon_ph" alt="Virus Icon">
+            Viruses
+        </button>
+        <button class="tab-link" onclick="openTab(event, 'fungi_tab')">
+            <img src="data:image/png;base64, py_fungi_icon_ph" alt="Fungi Icon">
+            Fungi
+        </button>
+        <button class="tab-link" onclick="openTab(event, 'parasite_tab')">
+            <img src="data:image/png;base64, py_parasite_icon_ph" alt="Parasite Icon">
+            Parasites
+        </button>
+    </div>
+    
+    <div id="bacteria_tab" class="tab">
+        <div class="results_accordion">
+            <button class="accordion">py_species1_ph</button>
+                <div class="panel">
+                    <p>
+                        py_species1_ph py_species1status_ph
+                    </p>
+                    <p>
+                        Detected Resistance Markers: py_species1res_ph
+                    </p>
+                    <p style="padding-bottom: 10px;">
+                        Detected Virulence Markers: py_species1vir_ph
+                    </p>
+                </div>
+            <button class="accordion">py_species2_ph</button>
+            <div class="panel">
+                <p>
+                    py_species2_ph py_species2status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_species2res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_species2vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_species3_ph</button>
+            <div class="panel">
+                <p>
+                    py_species3_ph py_species3status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_species3res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_species3vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_species4_ph</button>
+            <div class="panel">
+                <p>
+                    py_species4_ph py_species4status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_species4res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_species4vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_species5_ph</button>
+            <div class="panel">
+                <p>
+                    py_species5_ph py_species5status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_species5res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_species5vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_species6_ph</button>
+            <div class="panel">
+                <p>
+                    py_species6_ph py_species6status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_species6res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_species6vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_species7_ph</button>
+            <div class="panel">
+                <p>
+                    py_species7_ph py_species7status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_species7res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_species7vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_species8_ph</button>
+            <div class="panel">
+                <p>
+                    py_species8_ph py_species8status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_species8res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_species8vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_species9_ph</button>
+            <div class="panel">
+                <p>
+                    py_species9_ph py_species9status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_species9res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_species9vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_species10_ph</button>
+            <div class="panel">
+                <p>
+                    py_species10_ph py_species10status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_species10res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_species10vir_ph
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="virus_tab" class="tab">
+        <div class="results_accordion">
+            <button class="accordion">py_vspecies1_ph</button>
+                <div class="panel">
+                    <p>
+                        py_vspecies1_ph py_vspecies1status_ph
+                    </p>
+                    <p>
+                        Detected Resistance Markers: py_vspecies1res_ph
+                    </p>
+                    <p style="padding-bottom: 10px;">
+                        Detected Virulence Markers: py_vspecies1vir_ph
+                    </p>
+                </div>
+            <button class="accordion">py_vspecies2_ph</button>
+            <div class="panel">
+                <p>
+                    py_vspecies2_ph py_vspecies2status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_vspecies2res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_vspecies2vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_vspecies3_ph</button>
+            <div class="panel">
+                <p>
+                    py_vspecies3_ph py_vspecies3status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_vspecies3res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_vspecies3vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_vspecies4_ph</button>
+            <div class="panel">
+                <p>
+                    py_vspecies4_ph py_vspecies4status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_vspecies4res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_vspecies4vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_vspecies5_ph</button>
+            <div class="panel">
+                <p>
+                    py_vspecies5_ph py_vspecies5status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_vspecies5res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_vspecies5vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_vspecies6_ph</button>
+            <div class="panel">
+                <p>
+                    py_svpecies6_ph py_vspecies6status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_vspecies6res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_vspecies6vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_vspecies7_ph</button>
+            <div class="panel">
+                <p>
+                    py_vspecies7_ph py_vspecies7status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_vspecies7res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_vspecies7vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_vspecies8_ph</button>
+            <div class="panel">
+                <p>
+                    py_vspecies8_ph py_vspecies8status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_vspecies8res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_vspecies8vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_vspecies9_ph</button>
+            <div class="panel">
+                <p>
+                    py_vspecies9_ph py_vspecies9status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_vspecies9res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_vspecies9vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_vspecies10_ph</button>
+            <div class="panel">
+                <p>
+                    py_vspecies10_ph py_vspecies10status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_vspecies10res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_vspecies10vir_ph
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="fungi_tab" class="tab">
+        <div class="results_accordion">
+            <button class="accordion">py_fspecies1_ph</button>
+                <div class="panel">
+                    <p>
+                        py_fspecies1_ph py_fspecies1status_ph
+                    </p>
+                    <p>
+                        Detected Resistance Markers: py_fspecies1res_ph
+                    </p>
+                    <p style="padding-bottom: 10px;">
+                        Detected Virulence Markers: py_fspecies1vir_ph
+                    </p>
+                </div>
+            <button class="accordion">py_fspecies2_ph</button>
+            <div class="panel">
+                <p>
+                    py_fspecies2_ph py_fspecies2status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_fspecies2res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_fspecies2vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_fspecies3_ph</button>
+            <div class="panel">
+                <p>
+                    py_fspecies3_ph py_fspecies3status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_fspecies3res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_fspecies3vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_fspecies4_ph</button>
+            <div class="panel">
+                <p>
+                    py_fspecies4_ph py_fspecies4status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_fspecies4res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_fspecies4vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_fspecies5_ph</button>
+            <div class="panel">
+                <p>
+                    py_fspecies5_ph py_fspecies5status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_fspecies5res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_fspecies5vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_fspecies6_ph</button>
+            <div class="panel">
+                <p>
+                    py_svpecies6_ph py_fspecies6status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_fspecies6res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_fspecies6vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_fspecies7_ph</button>
+            <div class="panel">
+                <p>
+                    py_fspecies7_ph py_fspecies7status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_fspecies7res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_fspecies7vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_fspecies8_ph</button>
+            <div class="panel">
+                <p>
+                    py_fspecies8_ph py_fspecies8status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_fspecies8res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_fspecies8vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_fspecies9_ph</button>
+            <div class="panel">
+                <p>
+                    py_fspecies9_ph py_fspecies9status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_fspecies9res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_fspecies9vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_fspecies10_ph</button>
+            <div class="panel">
+                <p>
+                    py_fspecies10_ph py_fspecies10status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_fspecies10res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_fspecies10vir_ph
+                </p>
+            </div>
+        </div>
+    </div>
+                
+    <div id="parasite_tab" class="tab">
+        <div class="results_accordion">
+            <button class="accordion">py_pspecies1_ph</button>
+                <div class="panel">
+                    <p>
+                        py_pspecies1_ph py_pspecies1status_ph
+                    </p>
+                    <p>
+                        Detected Resistance Markers: py_pspecies1res_ph
+                    </p>
+                    <p style="padding-bottom: 10px;">
+                        Detected Virulence Markers: py_pspecies1vir_ph
+                    </p>
+                </div>
+            <button class="accordion">py_pspecies2_ph</button>
+            <div class="panel">
+                <p>
+                    py_pspecies2_ph py_pspecies2status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_pspecies2res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_pspecies2vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_pspecies3_ph</button>
+            <div class="panel">
+                <p>
+                    py_pspecies3_ph py_pspecies3status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_pspecies3res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_pspecies3vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_pspecies4_ph</button>
+            <div class="panel">
+                <p>
+                    py_pspecies4_ph py_pspecies4status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_pspecies4res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_pspecies4vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_pspecies5_ph</button>
+            <div class="panel">
+                <p>
+                    py_pspecies5_ph py_pspecies5status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_pspecies5res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_pspecies5vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_pspecies6_ph</button>
+            <div class="panel">
+                <p>
+                    py_svpecies6_ph py_pspecies6status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_pspecies6res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_pspecies6vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_pspecies7_ph</button>
+            <div class="panel">
+                <p>
+                    py_pspecies7_ph py_pspecies7status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_pspecies7res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_pspecies7vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_pspecies8_ph</button>
+            <div class="panel">
+                <p>
+                    py_pspecies8_ph py_pspecies8status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_pspecies8res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_pspecies8vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_pspecies9_ph</button>
+            <div class="panel">
+                <p>
+                    py_pspecies9_ph py_pspecies9status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_pspecies9res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_pspecies9vir_ph
+                </p>
+            </div>
+            <button class="accordion">py_pspecies10_ph</button>
+            <div class="panel">
+                <p>
+                    py_pspecies10_ph py_pspecies10status_ph
+                </p>
+                <p>
+                    Detected Resistance Markers: py_pspecies10res_ph
+                </p>
+                <p style="padding-bottom: 10px;">
+                    Detected Virulence Markers: py_pspecies10vir_ph
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div data-html2canvas-ignore="true" class="krona">
+        <p style="padding-left: 10px;"><b>Figure 3:</b> Krona output with human data removed.</p>
+        <iframe src="data:text/html;base64,py_krona_ph">
+
+        </iframe>
+    </div>
+    <div>
+        <p style="font-size: 14px";>
+            <b><u>Methods:</u></b>
+            <br>
+        </p>
+    </div>
+    <div class="textzone">
+        <p>
+            <b>Sample Preparation:</b>
+            py_sampletype_ph py_natype_ph was extracted by py_extkit_ph, libraries were generated using the py_libraryprep_ph. The library was then sequenced on the py_seqplatform_ph.<br>
+            <br>
+        </p>
+    </div>
+    <div class="disclaimer">
+        <p>
+            <b>Disclaimer</b>: The results of this report are confidential and are not to be used or disclosed to any other person or used for any other purpose, unless that use is disclosed or the purpose is expressly authorized in writing by NSW Health Pathology or the named recipient on this report.
+        </p>
+    </div>
+
+    <div data-html2canvas-ignore="true">
+        <button id="savebutton">Save as PDF</button>
+    </div>
+    <script>
+        const btn = document.getElementById("savebutton");
+        const options = {
+            margin: [10, 0, 0, 10],
+            image: { type: "png"},
+            html2canvas: { scale: 2, scrollY: 0, letterRendering: true},
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy']},
+        };
+        btn.addEventListener("click", function(){
+            var element = document.getElementById('html');
+            html2pdf().set(options).from(element).save('report.pdf');
+        });
+    </script>
+    <script>
+        function openTab(evt, tabName) {
+        var i, tabContent, tabLinks;
+        tabContent = document.getElementsByClassName("tab");
+        for (i = 0; i < tabContent.length; i++) {
+            tabContent[i].style.display = "none";
+        }
+        tabLinks = document.getElementsByClassName("tab-link");
+        for (i = 0; i < tabLinks.length; i++) {
+            tabLinks[i].classList.remove("active-tab");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.classList.add("active-tab");
+        }
+
+        function toggleAccordion() {
+            this.classList.toggle("active-accordion");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", function () {
+            var acc = document.getElementsByClassName("accordion");
+            for (var i = 0; i < acc.length; i++) {
+                acc[i].addEventListener("click", toggleAccordion);
+            }
+        });
+
+        document.getElementById('showAllButton').addEventListener('click', function() {
+            var panels = document.getElementsByClassName('panel');
+            for (var j = 0; j < panels.length; j++) {
+                var panel = panels[j];
+                panel.style.maxHeight = panel.scrollHeight + "px";
+                panel.previousElementSibling.classList.add('active-accordion');
+            }
+        });
+
+        document.getElementById('hideAllButton').addEventListener('click', function() {
+            var panels = document.getElementsByClassName('panel');
+            for (var j = 0; j < panels.length; j++) {
+                var panel = panels[j];
+                panel.style.maxHeight = null;
+                panel.previousElementSibling.classList.remove('active-accordion');
+        }
+        });
+    </script>
+</body>
+
+    
