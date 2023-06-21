@@ -159,7 +159,7 @@ Mycoplasma penetrans,,,bacterial,,,,is a known pathogen,,,1,1.0.1
 Mycoplasma pneumoniae,,,bacterial,,2104,,is a known pathogen,,,1,1.0.0
 Mycoplasma salivarium,,,bacterial,,2124,,is a known pathogen,Oral Cavity,,1,1.0.0
 Neisseria gonorrhoeae,,,bacterial,Gonorrhoea,485,,is a known pathogen,,Yes,"1,2",1.0.0
-Neisseria meningitidis,Meningococcus,,bacterial,Meningococcal disease,487,,is a known pathogen,Upper Respiratory Tract,Yes,"1,2",1.0.0
+Neisseria meningitidis,,,bacterial,Meningococcal disease,487,,is a known pathogen,Upper Respiratory Tract,Yes,"1,2",1.0.0
 Neorickettsia sennetsu,,,bacterial,,,,is a known pathogen,,,1,1.0.1
 Neoehrlichia mikurensis,Candidatus Neoehrlichia mikurensis,,bacterial,Neoehrlichiosis,,,has been reported in case reports,,,19,1.0.0
 Nocardia asteroides,,,bacterial,,,,is a known pathogen,,,1,1.0.1
