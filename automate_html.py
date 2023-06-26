@@ -9,6 +9,7 @@ from py_scripts import assists
 from py_scripts import base64_encode
 from py_scripts import pathogen_db_search
 from py_scripts import result_interpret
+from py_scripts import tpmAbundances_top10
 
 __version__ = "0.0.1"
 logging.getLogger().setLevel(logging.INFO)
@@ -40,12 +41,16 @@ def main():
     for file in file_list:
         if file.startswith("TestProjectWinkieFon") and file.endswith(".csv"):
             patient_data = result_interpret.clinican_results(os.path.join(args.input, file), args.wgsid)
-        elif file.endswith("sp.txt"):
-            species_list = result_interpret.species_list(os.path.join(args.input, file))
-        elif file.endswith("krona.html"):
+        elif file.endswith("Krona.html"):
             iframe_krona = os.path.join(args.input, file)
             base64_krona = base64_encode.html_base64_encode(iframe_krona)
-        elif file.endswith("_coverageplot.png"):
+        elif file.endswith("_hbar.png"):
+            hbar_png = os.path.join(args.input, file)
+            base64_hbar_png = base64_encode.html_base64_encode(hbar_png)
+        elif file.endswith("tpmAbundances.txt"):
+            tpm_file = os.path.join(args.input, file)
+            db_accordion = tpmAbundances_top10.read_in_tpm(tpm_file)
+        if file.endswith("_coverageplot.png"):
             coverage_png = os.path.join(args.input, file)
             base64_cov_png = base64_encode.html_base64_encode(coverage_png)
             match = re.search(".*_([A-Z]+_[A-Z0-9]+.*[0-9]*)_.*", file) # thx jake "_".join(file.split("_")[1:3])
@@ -61,12 +66,8 @@ def main():
                     </div>
                 </div>
             '''
-        elif file.endswith("_hbar.png"):
-            hbar_png = os.path.join(args.input, file)
-            base64_hbar_png = base64_encode.html_base64_encode(hbar_png)
         else:
             div_base64_cov_png = ""
-    db_accordion = pathogen_db_search.pathogen_search(species_list)
 
     # base64 encode all set images
     img_names = ["nswhp-logo.png", 
