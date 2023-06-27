@@ -41,7 +41,7 @@ def main():
     for file in file_list:
         if file.startswith("TestProjectWinkieFon") and file.endswith(".csv"):
             patient_data = result_interpret.clinican_results(os.path.join(args.input, file), args.wgsid)
-        elif file.endswith("Krona.html"):
+        elif file.endswith("kraken2.html"):
             iframe_krona = os.path.join(args.input, file)
             base64_krona = base64_encode.html_base64_encode(iframe_krona)
         elif file.endswith("_hbar.png"):
