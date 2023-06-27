@@ -7,8 +7,6 @@ from py_scripts import pathogen_db_search
 # this script will extract the top 10 of each domain/kingdom
 # specifically pulling Bacteria, Viruses, Fungi and Kingdom
 
-file = "/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/test/tpmAbundances.txt"
-
 def read_in_tpm(tpm_file):
     accordion_dict = {}
     colnames = ["TPM", 
@@ -43,10 +41,9 @@ def read_in_tpm(tpm_file):
         "Streptophyta",
     ]
 
-
-
-    tpm_file = pd.read_csv(tpm_file, sep="\t", names=colnames)
-    tpm_file = tpm_file[:50].reset_index(drop=True)
+    input_file = pd.read_csv(tpm_file, sep="\t", names=colnames)
+    tpm_input = input_file[input_file["Phylum"].str.contains("Chordata")==False]
+    tpm_file = tpm_input[:50].reset_index(drop=True)
     d_bacteria = tpm_file[
         tpm_file['Kingdom'].str.contains("Bacteria")][:10].reset_index(drop=True)
     d_viruses = tpm_file[tpm_file['Kingdom'].str.contains("Viruses")][:10].reset_index(drop=True)
@@ -70,4 +67,3 @@ def read_in_tpm(tpm_file):
         accordion_stuff = pathogen_db_search.pathogen_search(species_list, dk_status)
         accordion_dict.update(accordion_stuff)
     return accordion_dict
-
