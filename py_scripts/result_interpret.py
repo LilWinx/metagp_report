@@ -1,6 +1,8 @@
 import os
 import logging
 import pandas as pd
+#import numpy as np
+import math
 
 def species_list(file):
     """
@@ -48,7 +50,8 @@ def clinican_results(file, wgsid):
         1.0: "Qiagen DNeasy Ultraclean Kit",
         2.0: "ZymoBIOMICS DNA/RNA Miniprep Kits",
         3.0: "Roche Diagnostics High Pure PCR Template Preparation Kit",
-        4.0: "Roche Diagnostics MagNA Pure 96 DNA and Viral NA Small/Large Volume Kit"
+        4.0: "Roche Diagnostics MagNA Pure 96 DNA and Viral NA Small/Large Volume Kit",
+        5.0: "bioMérieux EasyMag"
     }
 
     library_prep_dict = {
@@ -91,6 +94,7 @@ def clinican_results(file, wgsid):
     # return to regularly scheduled programming
     clean_pt_data = combined_pt.drop(columns=[col for col in combined_pt.columns if col not in ph_dictionary.keys()]) # drop unnecessary columns not needed in report
     clean_pt_data['mrn'] = clean_pt_data["mrn"].astype('int64')
+    clean_pt_data = clean_pt_data.fillna("-").replace(0, "-")
     row = clean_pt_data.iloc[0]
     pt_dict = row.to_dict()
     pt_dict_map = {ph_dictionary.get(key, key): value for key, value in pt_dict.items()}
