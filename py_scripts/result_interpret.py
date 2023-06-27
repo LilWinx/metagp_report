@@ -1,8 +1,6 @@
 import os
 import logging
 import pandas as pd
-#import numpy as np
-import math
 
 def species_list(file):
     """
@@ -23,6 +21,7 @@ def clinican_results(file, wgsid):
         "seq_accession": "py_acc_ph",
         "dobage": "py_dob_ph",
         "req_date": "py_reqdate_ph",
+        "date_onset": "py_date_onset_ph",
         "date_collection": "py_doc_ph",
         "seq_date": "py_seqdate_ph",
         "seq_run_name": "py_runname_ph",
