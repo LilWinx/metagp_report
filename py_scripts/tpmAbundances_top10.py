@@ -38,7 +38,6 @@ def read_in_tpm(tpm_file):
         "Parabasalia",
         "Fornicata",
         "Evosea",
-        "Streptophyta",
     ]
 
     input_file = pd.read_csv(tpm_file, sep="\t", names=colnames)
