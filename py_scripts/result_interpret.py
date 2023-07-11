@@ -50,7 +50,7 @@ def clinican_results(file, wgsid):
         2.0: "ZymoBIOMICS DNA/RNA Miniprep Kits",
         3.0: "Roche Diagnostics High Pure PCR Template Preparation Kit",
         4.0: "Roche Diagnostics MagNA Pure 96 DNA and Viral NA Small/Large Volume Kit",
-        5.0: "bioMérieux EasyMag"
+        5.0: "bioMérieux EasyMag",
     }
 
     library_prep_dict = {
@@ -58,7 +58,8 @@ def clinican_results(file, wgsid):
         2.0: "Illumina Nextera DNA Library Preparation Kit",
         3.0: "Twist Comprehensive Panel",
         4.0: "ONT Rapid Barcoding Kit",
-        5.0: "RAPIDPrep Protocol"
+        5.0: "RAPIDPrep Protocol",
+        6.0: "NEBNext Ultra II RNA Library Prep Kit for Illumina",
     }
 
     seq_platorm_dict = {
