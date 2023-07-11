@@ -13,8 +13,7 @@ library(dplyr)
 library(patchwork)
 
 args <- commandArgs(trailingOnly = TRUE)
-#wd <- args[1]
-wd="/Users/wfon4473/Documents/R_workdir"
+wd <- args[1]
 setwd(dir = wd)
 species <- read.csv("tpmAbundances.txt", header = FALSE, sep = "\t")
 outname <- paste(args[2],"_hbar.png", sep = "")
