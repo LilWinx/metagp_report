@@ -1,14 +1,23 @@
+list.of.packages <- c(
+  "ggplot2",
+  "tidyverse",
+  "patchwork"
+  )
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+
 library(ggplot2)
 library(tidyverse)
 library(dplyr)
 library(patchwork)
 
+args <- commandArgs(trailingOnly = TRUE)
 #wd <- args[1]
-wd <- "/Users/wfon4473/Documents/R_workdir"
+wd="/Users/wfon4473/Documents/R_workdir"
 setwd(dir = wd)
 species <- read.csv("tpmAbundances.txt", header = FALSE, sep = "\t")
-outname <- paste("test","_hbar.png", sep = "")
-#outname <- "test.png"
+outname <- paste(args[2],"_hbar.png", sep = "")
 
 # pre-processing for first hbar
 colnames(species) <- c("TPM","Kingdom","Phylum","Class","Order","Family","Genus","Species")
@@ -25,11 +34,11 @@ sum_df$Kingdom <- factor(sum_df$Kingdom, levels = sorted_kingdom)
 
 # pre-processing for second hbar
 fungi_phyla <- c("Ascomycota", "Basidiomycota", "Chytridiomycota", "Microsporidia", "Glomeromycota", "Zygomycota")
-parasite_phyla <- c("Apicomplexa", "Ciliophora", "Bacillariophyta", "Cercozoa", "Euglenozoa", "Heterolobosea", "Parabasalia", "Fornicata", "Evosea", "Streptophyta")
+parasite_phyla <- c("Apicomplexa", "Ciliophora", "Bacillariophyta", "Cercozoa", "Euglenozoa", "Heterolobosea", "Parabasalia", "Fornicata", "Evosea")
 kingdoms <- c("Bacteria", "Viruses")
 selected <- species[species$Phylum %in% c(fungi_phyla, parasite_phyla) | species$Kingdom %in% kingdoms, ]
-selected <- subset(selected, Phylum != "Chordata")
-s_total_TPM <- sum(selected$TPM) # total excluding Chordata.
+selected <- subset(selected, Phylum != "Chordata" & Genus != "Unknown")
+s_total_TPM <- sum(selected$TPM) # total excluding Chordata & Unknowns
 sorted <- selected[order(selected$TPM, decreasing = TRUE), ]
 top_10 <- head(sorted, 10)
 top_10 <- top_10[, c("Species", "TPM")]
@@ -75,8 +84,8 @@ hbar1 <- ggplot(sum_df, aes(x = 2, y = Percentage, fill=Kingdom)) +
   theme_void() +
   guides(fill = guide_legend(keywidth = 0.7, keyheight = 0.7)) +
   theme(legend.position="bottom", 
-        legend.text = element_text(size = 7), 
-        legend.title = element_text(size = 9),
+        legend.text = element_text(size = 7, family = "Arial"), 
+        legend.title = element_text(size = 9, family="Arial"),
         panel.background = element_rect(fill = "transparent",
                                         colour = NA_character_), # necessary to avoid drawing panel outline
         panel.grid.major = element_blank(), # get rid of major grid
@@ -89,7 +98,7 @@ hbar1 <- ggplot(sum_df, aes(x = 2, y = Percentage, fill=Kingdom)) +
         plot.margin = margin(b = 2.5, unit = "pt")
   )
 
-hbar2 <- ggplot(sorted, aes(x = 2, y = Percentage, fill=Species)) +
+hbar2 <- ggplot(sorted, aes(x = 2, y = Percentage, fill=species)) +
                 geom_col(width = 0.1) +
                 coord_flip() + 
                 scale_y_reverse() +
@@ -97,8 +106,8 @@ hbar2 <- ggplot(sorted, aes(x = 2, y = Percentage, fill=Species)) +
                 theme_void() +
                 guides(fill = guide_legend(keywidth = 0.7, keyheight = 0.7)) +
                 theme(legend.position="bottom", 
-                      legend.text = element_text(size = 7), 
-                      legend.title = element_text(size = 9),
+                      legend.text = element_text(size = 7, family="Arial"), 
+                      legend.title = element_text(size = 9, family="Arial"),
                       panel.background = element_rect(fill = "transparent",
                                                       colour = NA_character_), # necessary to avoid drawing panel outline
                       panel.grid.major = element_blank(), # get rid of major grid
