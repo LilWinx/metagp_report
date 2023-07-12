@@ -11,8 +11,8 @@ Entrez.api_key = "dfa1ec2df7ac97add34b8fdec4d128a58a09"
 
 query = sys.argv[1]
 outdir = sys.argv[2]
-#db = "/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/db/full-ncbi-list.txt"
-db = "/project/MetaGP/ncbi_db/full-ncbi-list.txt"
+db = "/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/db/full-ncbi-list.txt"
+#db = "/project/MetaGP/ncbi_db/full-ncbi-list.txt"
 
 def search_query(query):
     ftp_path = None
@@ -63,12 +63,12 @@ def get_ftp_path(terms):
             continue
     return ftp_paths[0]
 
-def download_ref(ftp_path):
+def download_ref(ftp_path, outdir):
     rsync_path = ftp_path.replace("ftp:", "rsync:")
     retries = 10
     for attempt in range(1, retries + 1):
         try:
-            subprocess.call(["rsync", "--copy-links", "--recursive", "--times", "--verbose", rsync_path, outdir])
+            subprocess.check_call(['rsync', '--copy-links', '--recursive', '--times', '--verbose', rsync_path, outdir])
             print(f"Downloading {rsync_path} from NCBI")
         except subprocess.CalledProcessError as e:
             print(f"Download attempt {attempt} failed: {e}")
