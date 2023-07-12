@@ -5,6 +5,11 @@ from Bio import Entrez
 import pandas as pd
 from urllib.request import HTTPError
 import time
+import logging
+
+logging.getLogger().setLevel(logging.INFO)
+logging.basicConfig(level=logging.INFO, format="Meta-GP Report:%(levelname)s:%(asctime)s: %(message)s", datefmt="%y/%m/%d %I:%M:%S %p")
+logger = logging.getLogger()
 
 Entrez.email = "winkie.fong@sydney.edu.au"
 Entrez.api_key = "dfa1ec2df7ac97add34b8fdec4d128a58a09"
@@ -46,20 +51,20 @@ def get_ftp_path(terms):
             search_handle = Entrez.esearch(db="assembly", term=term)
             search_record = Entrez.read(search_handle)
             search_handle.close()
-            print(f"searching for {term}")
+            logging.info(f"searching for {term}")
 
             assembly_id = search_record["IdList"][0]
             assembly_handle = Entrez.esummary(db="assembly", id=assembly_id)
             assembly_summary = Entrez.read(assembly_handle)
             assembly_handle.close()
-            print(f"searching for {assembly_id}")
+            logging.info(f"searching for {assembly_id}")
 
             ftp_path = assembly_summary["DocumentSummarySet"]["DocumentSummary"][0]["FtpPath_RefSeq"]
             ftp_paths.append(ftp_path)
-            print(f"found ftp path {ftp_path}")
+            logging.info(f"found ftp path {ftp_path}")
         except HTTPError:
             time.sleep(2)
-            print(f"too fast!")
+            logging.info(f"too fast!")
             continue
     return ftp_paths[0]
 
@@ -69,11 +74,11 @@ def download_ref(ftp_path, outdir):
     for attempt in range(1, retries + 1):
         try:
             subprocess.check_call(['rsync', '--copy-links', '--recursive', '--times', '--verbose', rsync_path, outdir])
-            print(f"Downloading {rsync_path} from NCBI")
+            logging.info(f"Downloading {rsync_path} from NCBI")
         except subprocess.CalledProcessError as e:
-            print(f"Download attempt {attempt} failed: {e}")
-            print(f"Retrying...")
+            logging.info(f"Download attempt {attempt} failed: {e}")
+            logging.info(f"Retrying...")
             time.sleep(1)
-    print('Maximum number of retries reached. Download failed.')
+    logging.info('Maximum number of retries reached. Download failed.')
 
 search_query(query)
