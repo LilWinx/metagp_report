@@ -14,9 +14,13 @@ library(patchwork)
 
 args <- commandArgs(trailingOnly = TRUE)
 wd <- args[1]
+#wd <- "~/Documents/R_workdir"
 setwd(dir = wd)
 species <- read.csv("tpmAbundances.txt", header = FALSE, sep = "\t")
+#outname <- "output_hbar.png"
 outname <- paste(args[2],"_hbar.png", sep = "")
+dbPath <- args[3]
+#dbPath <- "/Users/wfon4473/Documents/Bioinformatics/metagp_report/database"
 
 # pre-processing for first hbar
 colnames(species) <- c("TPM","Kingdom","Phylum","Class","Order","Family","Genus","Species")
@@ -32,10 +36,16 @@ sorted_kingdom <- c(sorted_kingdom[sorted_kingdom != "Other"], "Other")
 sum_df$Kingdom <- factor(sum_df$Kingdom, levels = sorted_kingdom)
 
 # pre-processing for second hbar
-fungi_phyla <- c("Ascomycota", "Basidiomycota", "Chytridiomycota", "Microsporidia", "Glomeromycota", "Zygomycota")
-parasite_phyla <- c("Apicomplexa", "Ciliophora", "Bacillariophyta", "Cercozoa", "Euglenozoa", "Heterolobosea", "Parabasalia", "Fornicata", "Evosea")
+fungi_db_path <- paste(dbPath,"/fungi.txt", sep = "")
+fungi_db <- read.csv(fungi_db_path, header = 1, sep = "\t")
+fungi_species <- fungi_db$X.Organism.Name
+
+parasite_db_path <- paste(dbPath,"/parasites.txt", sep = "")
+parasite_db <- read.csv(parasite_db_path, header = 1, sep = "\t")
+parasite_species <- parasite_db$X.Organism.Name
+
 kingdoms <- c("Bacteria", "Viruses")
-selected <- species[species$Phylum %in% c(fungi_phyla, parasite_phyla) | species$Kingdom %in% kingdoms, ]
+selected <- species[species$Species %in% c(fungi_species, parasite_species) | species$Kingdom %in% kingdoms, ]
 selected <- subset(selected, Phylum != "Chordata" & Genus != "Unknown")
 s_total_TPM <- sum(selected$TPM) # total excluding Chordata & Unknowns
 sorted <- selected[order(selected$TPM, decreasing = TRUE), ]
