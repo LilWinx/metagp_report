@@ -73,14 +73,15 @@ def download_ref(ftp_path, outdir):
     retries = 10
     attempt = 1 
     while attempt <= retries:
-        try:
-            subprocess.check_call(['rsync', '--copy-links', '--recursive', '--times', '--verbose', rsync_path, outdir])
+        result = subprocess.run(['rsync', '--copy-links', '--recursive', '--times', '--verbose', rsync_path, outdir], capture_output=True, text=True)
+        if result.returncode == 0 and "rsync error" not in result.stderr:
             logging.info(f"Downloading {rsync_path} from NCBI")
-        except subprocess.CalledProcessError as e:
-            logging.info(f"Download attempt {attempt} failed: {e}")
-            logging.info(f"Retrying...")
-            time.sleep(1)
+            return
+        else:
+            logging.error(f'Download attempt {attempt} failed.')
+            logging.info(f'Retrying...')
+            time.sleep(1)  # Wait for 5 seconds before retrying
             attempt += 1
-    logging.info('Maximum number of retries reached. Download failed.')
+        logging.info('Maximum number of retries reached. Download failed.')
 
 search_query(query)
