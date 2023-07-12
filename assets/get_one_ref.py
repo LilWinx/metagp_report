@@ -71,7 +71,8 @@ def get_ftp_path(terms):
 def download_ref(ftp_path, outdir):
     rsync_path = ftp_path.replace("ftp:", "rsync:")
     retries = 10
-    for attempt in range(1, retries + 1):
+    attempt = 1 
+    while attempt <= retries:
         try:
             subprocess.check_call(['rsync', '--copy-links', '--recursive', '--times', '--verbose', rsync_path, outdir])
             logging.info(f"Downloading {rsync_path} from NCBI")
@@ -79,6 +80,7 @@ def download_ref(ftp_path, outdir):
             logging.info(f"Download attempt {attempt} failed: {e}")
             logging.info(f"Retrying...")
             time.sleep(1)
+            attempt += 1
     logging.info('Maximum number of retries reached. Download failed.')
 
 search_query(query)
