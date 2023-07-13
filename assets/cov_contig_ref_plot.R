@@ -19,12 +19,13 @@ library(grid)
 # written by Carl Suster @arcesu
 
 # input data
-#filter_coords <- args[1]
-#cov <- args[2]
-#outname <- args[3]
-filter_coords <- read_tsv("3160270484_S3.NC_002929_filter_coords.txt", skip = 3)
-cov <- read_tsv("3160270484_S3_NC_002929.2.depth.txt")
-outname <- "3160270484_S3_NC_002929.2_coverageplot.png"
+args <- commandArgs(trailingOnly = TRUE)
+filter_coords <- args[1]
+cov <- args[2]
+outname <- args[3]
+#filter_coords <- read_tsv("3160270484_S3.NC_002929_filter_coords.txt", skip = 3)
+#cov <- read_tsv("23-014-0003.AUSMDU00010536_Lp4741.depth.txt")
+#outname <- "3160270484_S3_NC_002929.2_coverageplot.png"
 
 # clean up contigs file to collapse overlapping regions
 endpoint <- filter_coords %>%
