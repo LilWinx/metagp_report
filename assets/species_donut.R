@@ -1,17 +1,49 @@
+list.of.packages <- c(
+  "ggplot2",
+  "tidyverse",
+  "patchwork"
+  )
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+
 library(ggplot2)
 library(tidyverse)
 library(dplyr)
+library(patchwork)
 
-#setwd(dir = "/Users/wfon4473/Documents/R_workdir")
-species <- read_tsv("species.txt")
-outname <- "horizontalbar.png"
+args <- commandArgs(trailingOnly = TRUE)
+wd <- args[1]
+#wd <- "~/Documents/R_workdir"
+setwd(dir = wd)
+species <- read.csv("tpmAbundances.txt", header = FALSE, sep = "\t")
+#outname <- "output_hbar.png"
+outname <- paste(args[2],"_donut.png", sep = "")
+dbPath <- args[3]
+#dbPath <- "/Users/wfon4473/Documents/Bioinformatics/metagp_report/database"
 
-# pre-processing
-filt_species <- species[, c("species", "total_RA")] # get only the two columns needed
-total_abundance <- sum(filt_species$total_RA) # calculate total_RA from Kraken
-other_abundance <- 100 - total_abundance # calculate other
-other_row <- data.frame(species = "Other", total_RA = other_abundance) # make new row
-new_species <- rbind(filt_species, other_row) # merge row into species data
+# pre-processing for second hbar
+fungi_db_path <- paste(dbPath,"/fungi.txt", sep = "")
+fungi_db <- read.csv(fungi_db_path, header = 1, sep = "\t")
+fungi_species <- fungi_db$X.Organism.Name
+
+parasite_db_path <- paste(dbPath,"/parasites.txt", sep = "")
+parasite_db <- read.csv(parasite_db_path, header = 1, sep = "\t")
+parasite_species <- parasite_db$X.Organism.Name
+
+kingdoms <- c("Bacteria", "Viruses")
+selected <- species[species$Species %in% c(fungi_species, parasite_species) | species$Kingdom %in% kingdoms, ]
+selected <- subset(selected, Phylum != "Chordata" & Genus != "Unknown")
+s_total_TPM <- sum(selected$TPM) # total excluding Chordata & Unknowns
+sorted <- selected[order(selected$TPM, decreasing = TRUE), ]
+top_10 <- head(sorted, 10)
+top_10 <- top_10[, c("Species", "TPM")]
+top_10$Percentage <- (top_10$TPM / s_total_TPM) * 100
+top10_total_tpm <- sum(top_10$Percentage)
+other_tpm <- 100 - top10_total_tpm # calculate other
+other_row <- data.frame(Species = "Other", TPM = 0, Percentage = other_tpm) # make new row
+new_species <- rbind(top_10, other_row) # merge row into species data
+
 colours <- c('#0079bf', 
              '#70b500', 
              '#ff9f1a', 
@@ -24,15 +56,15 @@ colours <- c('#0079bf',
              '#bc9b6a',
              '#c4c9cc')
 
-species_freq <- table(new_species$species)
+species_freq <- table(new_species$Species)
 sorted_species <- names(sort(species_freq, decreasing = TRUE))
 sorted_species <- c(sorted_species[sorted_species != "Other"], "Other")
-new_species$species <- factor(new_species$species, levels = sorted_species)
+new_species$Species <- factor(new_species$Species, levels = sorted_species)
 
 sorted <- mutate(new_species,
-                 species = fct_infreq(new_species$species, w = new_species$total_RA) |> fct_other(drop = "Other"))
+                 species = fct_infreq(new_species$Species, w = new_species$Percentage) |> fct_other(drop = "Other"))
 
-ggplot(sorted, aes(x = 2, y = total_RA, fill=species)) +
+donut <- ggplot(sorted, aes(x = 2, y = Percentage, fill=species)) +
   geom_col() +
   coord_polar(theta = "y") +
   xlim(c(0.5, 2.5)) +
@@ -40,8 +72,8 @@ ggplot(sorted, aes(x = 2, y = total_RA, fill=species)) +
   theme_void() +
   guides(fill = guide_legend(keywidth = 0.7, keyheight = 0.7)) +
   theme(legend.position="bottom", 
-        legend.text = element_text(size = 7), 
-        legend.title = element_text(size = 9),
+        legend.text = element_text(size = 7, family = "Arial"), 
+        legend.title = element_text(size = 9, family="Arial"),
         panel.background = element_rect(fill = "transparent",
                                         colour = NA_character_), # necessary to avoid drawing panel outline
         panel.grid.major = element_blank(), # get rid of major grid
@@ -50,7 +82,8 @@ ggplot(sorted, aes(x = 2, y = total_RA, fill=species)) +
                                        colour = NA_character_), # necessary to avoid drawing plot outline
         legend.background = element_rect(fill = "transparent", color = NA),
         legend.box.background = element_rect(fill = "transparent", color = NA),
-        legend.key = element_rect(fill = "transparent", color = NA)
+        legend.key = element_rect(fill = "transparent", color = NA),
+        plot.margin = margin(b = 2.5, unit = "pt")
   )
 
 ggsave(outname,
