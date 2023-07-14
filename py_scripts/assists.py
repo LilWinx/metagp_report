@@ -44,7 +44,7 @@ def check_input_folder(folder):
         logging.critical(f"There more than the expected number of files in {folder}, please double check")
         sys.exit(1)
     for file in input_files:
-        if file.endswith((".html", ".txt", ".png", ".csv")):
+        if file.endswith((".html", ".txt", ".png", ".csv", ".cov_stats")):
             check_files(os.path.join(folder, file))
         else:
             logging.critical(f"Invalid file type detected please check or remove")

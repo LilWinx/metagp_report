@@ -38,6 +38,7 @@ def main():
 
     assists.check_folders(args.input)
     file_list = assists.check_input_folder(args.input)
+    div_base64_cov_png = ""
     for file in file_list:
         if file.startswith("MetaGP") and file.endswith(".csv"):
             patient_data = result_interpret.clinican_results(os.path.join(args.input, file), args.wgsid)
@@ -50,11 +51,14 @@ def main():
         elif file.endswith("tpmAbundances.txt"):
             tpm_file = os.path.join(args.input, file)
             db_accordion = tpmAbundances_top10.read_in_tpm(tpm_file)
-        if file.endswith("_coverageplot.png"):
+        elif file.endswith("_coverageplot.png"):
             coverage_png = os.path.join(args.input, file)
+            covstats = os.path.join(args.input, "coverage_ref.cov_stats")
+            with open(covstats, 'r') as cov_stats:
+                lines = cov_stats.readlines()
+                second_row = lines[1].rstrip('\n')  # Get the second row and remove newline character
+                used_reference = second_row.split('\t')[0]  # Extract first instance before first tab
             base64_cov_png = base64_encode.html_base64_encode(coverage_png)
-            match = re.search(".*_([A-Z]+_[A-Z0-9]+.*[0-9]*)_.*", file) # thx jake "_".join(file.split("_")[1:3])
-            used_reference = match.group(1)
             div_base64_cov_png = f'''
                 <div class="coverage_plot">
                     <p style="padding-left: 10px; font-size: 12px">
@@ -66,8 +70,6 @@ def main():
                     </div>
                 </div>
             '''
-        else:
-            div_base64_cov_png = ""
 
     # base64 encode all set images
     img_names = ["nswhp-logo.png", 
