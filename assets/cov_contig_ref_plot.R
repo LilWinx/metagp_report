@@ -19,18 +19,18 @@ library(grid)
 # written by Carl Suster @arcesu
 
 # input data
-args <- commandArgs(trailingOnly = TRUE)
-filter_coords <- read_tsv(args[1])
+rgs <- commandArgs(trailingOnly = TRUE)
+filter_coords <- read_tsv(args[1], skip = 3)
 cov <- read_tsv(args[2])
 outname <- args[3]
-#filter_coords <- read_tsv("3160270484_S3.NC_002929_filter_coords.txt", skip = 3)
-#cov <- read_tsv("23-014-0003.AUSMDU00010536_Lp4741.depth.txt")
-#outname <- "3160270484_S3_NC_002929.2_coverageplot.png"
+#filter_coords <- read_tsv("/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/coverage_contigs_filter_coords.txt", skip = 3)
+#cov <- read_tsv("/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/coverage_ref.depth.txt")
+#outname <- "output_coverageplot.png"
 
 # clean up contigs file to collapse overlapping regions
 endpoint <- filter_coords %>%
   rename_with(.fn = ~ stringr::str_remove_all(.x, "^\\[|\\]$")) %>%
-  filter(`% ID` > 87) %>%
+  filter(`% IDY` > 87) %>%
   select(S1, E1) %>%
   arrange(S1)
 
