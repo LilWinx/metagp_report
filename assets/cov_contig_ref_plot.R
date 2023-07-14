@@ -30,7 +30,7 @@ outname <- args[3]
 # clean up contigs file to collapse overlapping regions
 endpoint <- filter_coords %>%
   rename_with(.fn = ~ stringr::str_remove_all(.x, "^\\[|\\]$")) %>%
-  filter(`% IDY` > 87) %>%
+  filter(`% ID` > 87) %>%
   select(S1, E1) %>%
   arrange(S1)
 
