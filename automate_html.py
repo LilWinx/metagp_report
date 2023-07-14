@@ -39,7 +39,7 @@ def main():
     assists.check_folders(args.input)
     file_list = assists.check_input_folder(args.input)
     for file in file_list:
-        if file.startswith("TestProjectWinkieFon") and file.endswith(".csv"):
+        if file.startswith("MetaGP") and file.endswith(".csv"):
             patient_data = result_interpret.clinican_results(os.path.join(args.input, file), args.wgsid)
         elif file.endswith("kraken2.html"):
             iframe_krona = os.path.join(args.input, file)
