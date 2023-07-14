@@ -19,7 +19,7 @@ library(grid)
 # written by Carl Suster @arcesu
 
 # input data
-rgs <- commandArgs(trailingOnly = TRUE)
+args <- commandArgs(trailingOnly = TRUE)
 filter_coords_file <- args[1]
 filter_coords <- read_tsv(filter_coords_file, skip = 3)
 cov_file <- args[2]
