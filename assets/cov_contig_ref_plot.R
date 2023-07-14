@@ -20,8 +20,8 @@ library(grid)
 
 # input data
 args <- commandArgs(trailingOnly = TRUE)
-filter_coords <- args[1]
-cov <- args[2]
+filter_coords <- read_tsv(args[1])
+cov <- read_tsv(args[2])
 outname <- args[3]
 #filter_coords <- read_tsv("3160270484_S3.NC_002929_filter_coords.txt", skip = 3)
 #cov <- read_tsv("23-014-0003.AUSMDU00010536_Lp4741.depth.txt")
