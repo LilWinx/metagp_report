@@ -23,6 +23,7 @@ dbPath <- args[3]
 #dbPath <- "/Users/wfon4473/Documents/Bioinformatics/metagp_report/database"
 
 # pre-processing for second hbar
+colnames(species) <- c("TPM","Kingdom","Phylum","Class","Order","Family","Genus","Species")
 fungi_db_path <- paste(dbPath,"/fungi.txt", sep = "")
 fungi_db <- read.csv(fungi_db_path, header = 1, sep = "\t")
 fungi_species <- fungi_db$X.Organism.Name
