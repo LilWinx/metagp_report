@@ -21,7 +21,7 @@ def read_in_tpm(tpm_file):
     fungi_db = pd.read_csv(os.path.join(os.path.dirname(os.path.dirname(__file__)), "database/fungi.txt"), sep = "\t", header = 0)
     parasites_db = pd.read_csv(os.path.join(os.path.dirname(os.path.dirname(__file__)), "database/parasites.txt"), sep = "\t" , header = 0)
     input_file = pd.read_csv(tpm_file, sep="\t", names=colnames)
-    tpm_input = input_file[input_file["Phylum"].str.contains("Chordata"|"Unknown")==False]
+    tpm_input = input_file[input_file["Phylum"].str.contains("Chordata|Unknown")==False]
     tpm_file = tpm_input[:50].reset_index(drop=True)
     d_bacteria = tpm_file[
         tpm_file['Kingdom'].str.contains("Bacteria")][:10].reset_index(drop=True)
