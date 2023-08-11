@@ -22,7 +22,7 @@ db = "/project/MetaGP/ncbi_db/full-ncbi-list.txt"
 def search_query(query):
     ftp_path = None
     ncbi_db = pd.read_csv(db, sep = "\t", header=0)
-    match = ncbi_db[ncbi_db["#Organism/Name"].str.lower() == query.lower()]
+    match = ncbi_db[ncbi_db["#Organism/Name"].str.lower() == query.lower()] # matching the "final_result" with ncbi reference genomes
     if len(match) > 0:
         bacteria_match = match[match["Kingdom/Phylum"] == "Bacteria"]
         if len(bacteria_match) > 0:
@@ -34,8 +34,13 @@ def search_query(query):
         eukaryote_match = match[match["Kingdom/Phylum"] == "Eukaryotes"]
         if len(eukaryote_match) > 0:
             ftp_path = get_ftp_path(eukaryote_match["Assembly Accession"])
-    print(ftp_path)
-    download_ref(ftp_path, outdir)
+    else:
+        ftp_path = no_match_search(query)
+    if ftp_path is not None:
+        download_ref(ftp_path, outdir)
+    else:
+        logging.critical(f"Searched whole database, no sequences found. Exiting")
+        sys.exit(1)
 
 def extract_NC(string):
     matches = re.findall(r'NC_\d+\.\d+', string)
@@ -67,6 +72,29 @@ def get_ftp_path(terms):
             logging.info(f"too fast!")
             continue
     return ftp_paths[0]
+
+def no_match_search(query):
+    try: 
+        query=f"{query}[Organism] AND (\"latest refseq\"[filter] AND \"complete genome\"[filter])"
+        search_handle = Entrez.esearch(db="assembly", term=query, idtype="acc", retmax=1)
+        logging.info(f"Searching for {query}")
+        search_record = Entrez.read(search_handle)
+        search_record_count = search_record['Count']
+        search_handle.close()
+        logging.info(f"{search_record_count} records found for {query}, extracting first encounter")
+        
+        unique_id = search_record['IdList'][0]
+        assembly_handle = Entrez.esummary(db="assembly", id=unique_id)
+        assembly_summary = Entrez.read(assembly_handle)
+        assembly_handle.close()
+        logging.info(f"searching for {unique_id}")
+
+        ftp_path = assembly_summary["DocumentSummarySet"]["DocumentSummary"][0]["FtpPath_RefSeq"]
+        logging.info(f"found ftp path {ftp_path}")
+    except HTTPError:
+            time.sleep(2)
+            logging.info(f"too fast!")
+    return ftp_path
 
 def download_ref(ftp_path, outdir):
     rsync_path = ftp_path.replace("ftp:", "rsync:")
