@@ -17,6 +17,8 @@ library(ivs)
 library(patchwork)
 library(purrr)
 library(grid)
+library(scales)
+library(dplyr)
 
 # written by Carl Suster @arcesu
 
