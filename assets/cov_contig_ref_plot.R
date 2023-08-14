@@ -23,9 +23,9 @@ library(grid)
 # input data
 args <- commandArgs(trailingOnly = TRUE)
 filter_coords_file <- args[1]
-#filter_coords <- read_tsv(filter_coords_file, skip = 3)
+filter_coords <- read_tsv(filter_coords_file, skip = 3)
 cov_file <- args[2]
-#cov <- read_tsv(cov_file)
+cov <- read_tsv(cov_file)
 outdir <- args[3]
 #filter_coords <- read_tsv("/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/coverage_contigs_filter_coords.txt", skip = 3)
 #cov <- read_tsv("/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/coverage_ref.depth.txt")
