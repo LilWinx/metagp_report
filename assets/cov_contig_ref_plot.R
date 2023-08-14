@@ -169,4 +169,6 @@ for (entry_data_names in grouped_data_list) {
       dpi = 300,
       scale = 2,
       bg = "transparent")
+  print("Output file located in:")
+  print(paste(outdir, entry_name, outname, sep = ""))
 }
