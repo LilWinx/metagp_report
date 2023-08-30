@@ -12,7 +12,7 @@ def extract_match_contigs(assembly_filename, match_contigs_filename, output_file
         
         for line in assembly_file:
             if line.startswith(">"):
-                current_contig = line.strip()[1:]
+                current_contig = line.strip()[1:].split()[0]
                 keep_contig = current_contig in match_contigs
                 if keep_contig:
                     output_file.write(line)
