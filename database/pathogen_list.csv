@@ -2,6 +2,7 @@ Species,AltNames,GenoSero-types,Disease_type,Disease_Name,Tax_ID,NCBI_Genbank_ID
 Abiotrophia defectiva,,,bacterial,,46125,NZ_CP053988.1,is a known pathogen,,,1,1.0.0
 Achromobacter xylosoxidans,,,bacterial,,85698,NZ_CP068211.1,is a known pathogen,,,1,1.0.0
 Acinetobacter baumannii,,,bacterial,,,,is a known pathogen,,,1,1.0.1
+Acinetobacter junii,,,bacterial,,,,is a known pathogen,,,,1.0.1
 Actinomadura madurae,,,bacterial,,,,is a known pathogen,,,1,1.0.1
 Actinomadura pelletieri,,,bacterial,,,,is a known pathogen,,,1,1.0.1
 Actinomyces gerencseriae,,,bacterial,,,,is a known pathogen,,,1,1.0.1
@@ -742,3 +743,4 @@ unidentified human coronavirus,,,viral,,,,is a known pathogen,,,1,1.0.1
 31. Bartonella vinsonii https://doi.org/10.1186/1756-3305-3-29,,,,,,,,,,,
 32. Rocio virus https://doi.org/10.3390%2Fv13112293,,,,,,,,,,,
 33. Ilheus virus https://doi.org/10.3201%2Feid1803.111486,,,,,,,,,,,
+34. Acinetobacter junii https://doi.org/10.1016/j.eucr.2020.101209,,,,,,,,,,,
