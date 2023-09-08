@@ -31,7 +31,7 @@ cov <- read_tsv(cov_file)
 outdir <- args[3]
 #filter_coords <- read_tsv("/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/coverage_contigs_filter_coords.txt", skip = 3)
 #cov <- read_tsv("/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/coverage_ref.depth.txt")
-outname <- "_coverageplot.png"
+outname <- "coverageplot.png"
 
 # clean up contigs file to collapse overlapping regions
 merge_overlap <- function(fc_df) {
@@ -164,7 +164,7 @@ for (entry_data_names in grouped_data_list) {
   assign(fc_plot_name, fc_plot)
   assign(combined_plot_name, plot)
   
-  ggsave(paste(outdir, entry_name, outname, sep = ""),
+  ggsave(paste(outdir, entry_name, outname, sep = "_"),
       width = 1500,
       height = 500,
       units = "px",
