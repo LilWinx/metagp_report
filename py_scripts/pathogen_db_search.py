@@ -12,12 +12,25 @@ def pathogen_search(species_list, dk_status):
     res_dict = {}
     vir_dict = {}
     pathogen_db = pd.read_csv(os.path.join(os.path.dirname(os.path.dirname(__file__)), "database/pathogen_list.csv"), header = 0)
+    contam_db = pd.read_csv(os.path.join(os.path.dirname(os.path.dirname(__file__)), "database/known_contaminants.csv"), header = 0)
     logging.info("Reading Pathogen_List database to fill the species list with metadata")
     if len(species_list) < 10:
         logging.info(f"There was not enough species in {dk_status} detected, filling with dashes.")
         species_list += ['-'] * (10 - len(species_list))
+    
     for i, species in enumerate(species_list, start = 1):
         match_species = pathogen_db[(pathogen_db['Species'] == species) | (pathogen_db['AltNames'] == species)]
+        contam_species = contam_db[(contam_db['Species'] == species)]
+        if not contam_species.empty:
+            
+            species = f"{species}"
+            if contam_species['Reason'].isna().all() is True:
+                contam_status = contam_status.iloc[0]['Statement']
+            else:
+                contam_status = ". " + species + " " + contam_species.iloc[0]['Statement'] + " " + contam_species.iloc[0]['Reason']
+        else:
+            contam_status = ""
+
         if not match_species.empty:
             species = f"{species} \u2757"
             status = match_species.iloc[0]['Status']
@@ -40,6 +53,8 @@ def pathogen_search(species_list, dk_status):
             status = ""
         else:
             status = " is not a known pathogen"
+        status = status + contam_status
+
         if dk_status == "Bacteria":
             species_ph = f"py_species{i}_ph"
             status_ph = f"py_species{i}status_ph"
@@ -64,6 +79,7 @@ def pathogen_search(species_list, dk_status):
         status_dict[status_ph] = species.replace(" \u2757", " ") + status
         res_dict[res_ph] = "-"
         vir_dict[vir_ph] = "-"
+    
     list_of_dicts = [status_dict, res_dict, vir_dict]
     for dictionary in list_of_dicts:
         species_dict.update(dictionary)
