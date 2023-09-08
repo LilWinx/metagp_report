@@ -102,7 +102,7 @@ for (entry_data_names in grouped_data_list) {
   combined_plot_name <- paste0("combined_plot_", entry_name)
   
   assign(cov_df_name, cov_df)
-  assign(cov_plot_name, cov_plot)
+  assign(cov_plot_name, plot)
   assign(combined_plot_name, plot)
   
   ggsave(paste(outdir, entry_name, outname, sep = "_"),
