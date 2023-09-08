@@ -24,12 +24,12 @@ library(dplyr)
 
 # input data
 args <- commandArgs(trailingOnly = TRUE)
-#cov_file <- args[1]
-#cov <- read_tsv(cov_file)
-#outdir <- args[2]
-outdir <- "/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/coverage_ref.test"
+cov_file <- args[1]
+cov <- read_tsv(cov_file)
+outdir <- args[2]
+#outdir <- "/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/coverage_ref.test"
 #filter_coords <- read_tsv("/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/coverage_contigs_filter_coords.txt", skip = 3)
-cov <- read_tsv("/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/coverage_ref.depth.txt")
+#cov <- read_tsv("/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/coverage_ref.depth.txt")
 outname <- "coverageplot.png"
 
 # filter the filter_coords and cov file if it contains more than one unique value
