@@ -214,6 +214,16 @@
         .active-accordion:after {
             content: "\2796"; /* "minus" sign (-) */
         }
+        
+        .sign_off_table {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sign_off_table td {
+            font-size: 14px;
+        }
 
         .disclaimer p {
             font-size: 9px;
@@ -868,12 +878,12 @@
             </iframe>
         </div>
     </div>
-        <div>
-            <p style="font-size: 14px";>
-                <b><u>Methods:</u></b>
-                <br>
-            </p>
-        </div>
+    <div>
+        <p style="font-size: 14px";>
+            <b><u>Methods:</u></b>
+            <br>
+        </p>
+    </div>
     <div class="textzone">
         <p>
             <b>Sample Preparation and Analysis:</b>
@@ -881,8 +891,27 @@
             <br>
         </p>
     </div>
+    <div>
+        <table class="sign_off_table">
+            <tbody>
+                <tr>
+                    <td style="padding-right: 50px;"><b>Dr Jen Kok</b></td>
+                    <td style="padding-right: 50px;"><b>Dr John-Sebastian Eden</b></td>
+                    <td style="padding-right: 50px;"><b>Dr Winkie Fong</b></td>
+                    <td><b>Dr Philip Britton</b></td>
+
+                </tr>
+                <tr style="padding-bottom: 20px;">
+                    <td style="padding-right: 50px;">Supervising Pathologist</td>
+                    <td style="padding-right: 50px;">Post-Doctoral Fellow</td>
+                    <td style="padding-right: 50px;">Bioinformatician</td>
+                    <td>Supervising Clinician</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <div class="disclaimer">
-        <p>
+        <p style="padding-top: 20px;">
             <b>Disclaimer</b>: The results of this report are confidential and are not to be used or disclosed to any other person or used for any other purpose, unless that use is disclosed or the purpose is expressly authorized in writing by NSW Health Pathology or the named recipient on this report.
         </p>
     </div>
