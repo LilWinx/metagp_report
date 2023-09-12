@@ -1,6 +1,7 @@
 import os
 import logging
 import pandas as pd
+import datetime
 
 def species_list(file):
     """
@@ -81,6 +82,7 @@ def clinican_results(file, wgsid):
     combined_pt = pd.concat([pt_data, filt_pt], axis = 1) # recombine the two dataframes
     combined_pt['pn'] = combined_pt['first_name'] + ' ' + combined_pt['last_name'] # combine first and last name for patient name
     combined_pt['dobage'] = combined_pt['dob'] + ' (' + str(combined_pt['age'][0]) + " y/o)" # combine dob & age
+    combined_pt['rep_gen_date'] = datetime.datetime.now().strftime("%y/%m/%d %I:%M:%S")
     #MAP TIME
     map_dict = {'na_type': na_type_dict, 
                 'ext_kit': extraction_kit_dict, 
