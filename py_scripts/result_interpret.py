@@ -41,9 +41,9 @@ def clinican_results(file, wgsid):
     }
 
     na_type_dict = {
-        0: "DNA",
-        1: "RNA",
-        2: "DNA & RNA",
+        1: "DNA",
+        2: "RNA",
+        3: "DNA & RNA",
     }
 
     extraction_kit_dict = {
