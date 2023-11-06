@@ -518,6 +518,7 @@ Banna virus,,,viral,,77763,,is a known pathogen,,,1,1.0.0
 Barmah Forest virus,,,viral,,11020,NC_001786.1,is a known pathogen,,Yes,"1,2",1.0.0
 Bayou orthohantavirus,,,viral,,,,is a known pathogen,,,1,1.0.1
 Betacoronavirus 1,,,viral,,,,is a known pathogen,,,1,1.0.1
+Betapolyomavirus macacae,SV40,,viral,Progressive multifocal leukoencephalopathy,,,is a known pathogen,,,35,1.0.2
 Bhanja bandavirus,,,viral,,,,is a known pathogen,,,22,1.0.0
 Black Creek Canal orthohantavirus,,,viral,,,,is a known pathogen,,,1,1.0.1
 Borna disease virus,Mammalian 1 orthobornavirus,,viral,,,,has been reported in case reports,,,,1.0.0
@@ -610,7 +611,7 @@ Influenza B virus,,,viral,,11520,,is a known pathogen,,Yes,"1,2",1.0.0
 Influenza C virus,,,viral,,11552,,is a known pathogen,,Yes,"1,2",1.0.0
 Isfahan vesiculovirus,,,viral,,,,is a known pathogen,,,1,1.0.1
 Jamestown Canyon orthobunyavirus,Jamestown Canyon virus,,viral,,2560532,,is a known pathogen,,Yes,"1,2",1.0.0
-Japanese encephalitis virus,,,viral,Japanese encephalitis,11072,NC_001437.1,is a known pathogen,,Yes,"1,2",1.0.0
+Orthoflavivirus japonicum,Japanese encephalitis virus,,viral,Japanese encephalitis,11072,NC_001437.1,is a known pathogen,,Yes,"1,2",1.0.0
 Kyasanur Forest disease virus,Alkhurma hemorrhagic fever virus,,viral,Kyasanur Forest disease,33743,NC_039218.1,is a known pathogen,,Yes,"1,2",1.0.0
 La Crosse orthobunyavirus,,,viral,,2560547,GCF_000850965.1,is a known pathogen,,,1,1.0.0
 Lagos bat lyssavirus,,,viral,,38766,NC_020807.1,is a known pathogen,,,1,1.0.0
@@ -744,3 +745,4 @@ unidentified human coronavirus,,,viral,,,,is a known pathogen,,,1,1.0.1
 32. Rocio virus https://doi.org/10.3390%2Fv13112293,,,,,,,,,,,
 33. Ilheus virus https://doi.org/10.3201%2Feid1803.111486,,,,,,,,,,,
 34. Acinetobacter junii https://doi.org/10.1016/j.eucr.2020.101209,,,,,,,,,,,
+35. SV40 ,,,,,,,,,,,
