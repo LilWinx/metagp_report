@@ -9,7 +9,8 @@ from py_scripts import assists
 from py_scripts import base64_encode
 from py_scripts import pathogen_db_search
 from py_scripts import result_interpret
-from py_scripts import tpmAbundances_top10
+#from py_scripts import tpmAbundances_top10
+from py_scripts import zscore_top10
 
 __version__ = "0.0.1"
 logging.getLogger().setLevel(logging.INFO)
@@ -42,15 +43,16 @@ def main():
     for file in file_list:
         if file.startswith("MetaGP") and file.endswith(".csv"):
             patient_data = result_interpret.clinican_results(os.path.join(args.input, file), args.wgsid)
-        elif file.endswith("kraken2.html"):
+        elif file.endswith(".html"):
             iframe_krona = os.path.join(args.input, file)
             base64_krona = base64_encode.html_base64_encode(iframe_krona)
         elif file.endswith("_hbar.png"):
             hbar_png = os.path.join(args.input, file)
             base64_hbar_png = base64_encode.html_base64_encode(hbar_png)
-        elif file.endswith("tpmAbundances.txt"):
+        elif file.endswith("zscore.csv"):
             tpm_file = os.path.join(args.input, file)
-            db_accordion = tpmAbundances_top10.read_in_tpm(tpm_file)
+            db_accordion = zscore_top10.read_in_tpm(tpm_file)
+            #db_accordion = tpmAbundances_top10.read_in_tpm(tpm_file)
         elif file.endswith("_coverageplot.png"):
             coverage_png = os.path.join(args.input, file)
             covstats = os.path.join(args.input, "coverage_ref.cov_stats")

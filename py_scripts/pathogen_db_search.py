@@ -9,8 +9,7 @@ def pathogen_search(species_list, dk_status):
     """
     species_dict = {}
     status_dict = {}    
-    res_dict = {}
-    vir_dict = {}
+    zscore_dict = {}
     pathogen_db = pd.read_csv(os.path.join(os.path.dirname(os.path.dirname(__file__)), "database/pathogen_list.csv"), header = 0)
     contam_db = pd.read_csv(os.path.join(os.path.dirname(os.path.dirname(__file__)), "database/known_contaminants.csv"), header = 0)
     logging.info("Reading Pathogen_List database to fill the species list with metadata")
@@ -58,29 +57,23 @@ def pathogen_search(species_list, dk_status):
         if dk_status == "Bacteria":
             species_ph = f"py_species{i}_ph"
             status_ph = f"py_species{i}status_ph"
-            res_ph = f"py_species{i}res_ph"
-            vir_ph = f"py_species{i}vir_ph"
+            zscore_ph = f"py_species{i}zscore_ph"
         if dk_status == "Viruses":
             species_ph = f"py_vspecies{i}_ph"
             status_ph = f"py_vspecies{i}status_ph"
-            res_ph = f"py_vspecies{i}res_ph"
-            vir_ph = f"py_vspecies{i}vir_ph"
+            zscore_ph = f"py_vspecies{i}zscore_ph"
         if dk_status == "Fungi":
             species_ph = f"py_fspecies{i}_ph"
             status_ph = f"py_fspecies{i}status_ph"
-            res_ph = f"py_fspecies{i}res_ph"
-            vir_ph = f"py_fspecies{i}vir_ph"
+            zscore_ph = f"py_fspecies{i}zscore_ph"
         if dk_status == "Parasites":
             species_ph = f"py_pspecies{i}_ph"
             status_ph = f"py_pspecies{i}status_ph"
-            res_ph = f"py_pspecies{i}res_ph"
-            vir_ph = f"py_pspecies{i}vir_ph"
+            zscore_ph = f"py_pspecies{i}zscore_ph"
         species_dict[species_ph] = species
         status_dict[status_ph] = species.replace(" \u2757", " ") + status
-        res_dict[res_ph] = "-"
-        vir_dict[vir_ph] = "-"
     
-    list_of_dicts = [status_dict, res_dict, vir_dict]
+    list_of_dicts = [status_dict, zscore_dict]
     for dictionary in list_of_dicts:
         species_dict.update(dictionary)
     return species_dict
