@@ -74,10 +74,10 @@ def clinican_results(file, wgsid):
     }
 
     sample_data = pd.read_csv(file, sep=",", header=0, encoding='latin-1')
-    pt_data = sample_data.iloc[:,:13] # split dataframe to only have first 13 columns
+    pt_data = sample_data.iloc[:,:12] # split dataframe to only have first 13 columns
     pt_data.dropna(how='all', inplace=True) # drop the empty rows 
     pt_data.reset_index(drop=True, inplace=True) # reset the index
-    result_data = sample_data.iloc[:, 13:] # 2nd split to get other half
+    result_data = sample_data.iloc[:, 12:] # 2nd split to get other half
     filt_pt = result_data[result_data['wgs_id'] == str(wgsid)] # only have the row with the correct wgsid
     filt_pt.reset_index(drop=True, inplace=True) # reset the index
     combined_pt = pd.concat([pt_data, filt_pt], axis = 1) # recombine the two dataframes
