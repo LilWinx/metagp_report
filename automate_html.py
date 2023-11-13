@@ -4,6 +4,7 @@ import sys
 import argparse
 import logging
 import warnings
+import gen_pdf
 from py_scripts import arguments
 from py_scripts import assists
 from py_scripts import base64_encode
@@ -11,6 +12,7 @@ from py_scripts import pathogen_db_search
 from py_scripts import result_interpret
 #from py_scripts import tpmAbundances_top10
 from py_scripts import zscore_top10
+
 
 __version__ = "0.0.1"
 logging.getLogger().setLevel(logging.INFO)
@@ -81,6 +83,7 @@ def main():
                  "fungi.png", 
                  "parasite.png"]
     base64_images = []
+    images = []
 
     for img in img_names:
         img_path = os.path.join(os.path.dirname(__file__), "assets", img)
@@ -113,6 +116,27 @@ def main():
 
     with open(output_file, "w") as outfile:
         outfile.write(template)
+
+    # replace base64 back to original image for pdf gen
+    for img in img_names:
+        img_path = os.path.join(os.path.dirname(__file__), "assets", img)
+        variable_name = "img_" + os.path.splitext(img)[0]
+        locals()[variable_name] = img_path
+        images.append(variable_name)
+
+    update_dict = {
+        "py_logo_ph": locals()[images[0]],
+        "py_metagplogo_ph": locals()[images[1]],
+        "py_bacteria_icon_ph": locals()[images[2]],
+        "py_virus_icon_ph": locals()[images[3]],
+        "py_fungi_icon_ph": locals()[images[4]],
+        "py_parasite_icon_ph": locals()[images[5]],
+        "py_coverageimg_ph": coverage_png,
+        "py_hbar_ph": hbar_png
+    }
+    replace_dict.update(update_dict)
+    gen_pdf.pdf_template(outdir, replace_dict)
+
 
 if __name__ == "__main__":
     main()
