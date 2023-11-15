@@ -16,7 +16,7 @@ args <- commandArgs(trailingOnly = TRUE)
 wd <- args[1]
 #wd <- "~/Documents/R_workdir"
 setwd(dir = wd)
-#species <- read.csv("zscore.csv", header = 1)
+species <- read.csv("zscore.csv", header = 1)
 #outname <- "output_hbar.png"
 outname <- paste(args[2],"_hbar.png", sep = "")
 dbPath <- args[3]

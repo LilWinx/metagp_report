@@ -16,14 +16,26 @@ args <- commandArgs(trailingOnly = TRUE)
 wd <- args[1]
 #wd <- "~/Documents/R_workdir"
 setwd(dir = wd)
-species <- read.csv("tpmAbundances.txt", header = FALSE, sep = "\t")
+species <- read.csv("zscore.csv", header = 1)
 #outname <- "output_hbar.png"
-outname <- paste(args[2],"_donut.png", sep = "")
+outname <- paste(args[2],"_hbar.png", sep = "")
 dbPath <- args[3]
 #dbPath <- "/Users/wfon4473/Documents/Bioinformatics/metagp_report/database"
+species <- species %>% filter(ranked_score > 1)
+
+# pre-processing for first hbar
+filt_kingdom <- species[, c("superkingdom", "tpm")] # get kingdom and TPM
+k_total_TPM <- sum(filt_kingdom$tpm)
+filt_kingdom$superkingdom <- ifelse(filt_kingdom$superkingdom == "", "Other", filt_kingdom$superkingdom)
+sum_df <- aggregate(tpm ~ superkingdom, data = filt_kingdom, FUN = sum)
+sum_df$percentage <- (sum_df$tpm / k_total_TPM) * 100
+
+kingdom_freq <- table(sum_df$superkingdom)
+sorted_kingdom <- names(sort(kingdom_freq, decreasing = TRUE))
+sorted_kingdom <- c(sorted_kingdom[sorted_kingdom != "Other"], "Other")
+sum_df$superkingdom <- factor(sum_df$superkingdom, levels = sorted_kingdom)
 
 # pre-processing for second hbar
-colnames(species) <- c("TPM","Kingdom","Phylum","Class","Order","Family","Genus","Species")
 fungi_db_path <- paste(dbPath,"/fungi.txt", sep = "")
 fungi_db <- read.csv(fungi_db_path, header = 1, sep = "\t")
 fungi_species <- fungi_db$X.Organism.Name
@@ -32,17 +44,20 @@ parasite_db_path <- paste(dbPath,"/parasites.txt", sep = "")
 parasite_db <- read.csv(parasite_db_path, header = 1, sep = "\t")
 parasite_species <- parasite_db$X.Organism.Name
 
+
+
 kingdoms <- c("Bacteria", "Viruses")
-selected <- species[species$Species %in% c(fungi_species, parasite_species) | species$Kingdom %in% kingdoms, ]
-selected <- subset(selected, Phylum != "Chordata" & Genus != "Unknown")
-s_total_TPM <- sum(selected$TPM) # total excluding Chordata & Unknowns
-sorted <- selected[order(selected$TPM, decreasing = TRUE), ]
+selected <- species[species$species %in% c(fungi_species, parasite_species) | species$superkingdom %in% kingdoms, ]
+selected <- subset(selected, phylum != "Chordata" & genus != "Unknown")
+s_total_TPM <- sum(species$tpm) # total excluding Chordata & Unknowns
+sorted <- selected[order(selected$tpm, decreasing = TRUE), ]
 top_10 <- head(sorted, 10)
-top_10 <- top_10[, c("Species", "TPM")]
-top_10$Percentage <- (top_10$TPM / s_total_TPM) * 100
-top10_total_tpm <- sum(top_10$Percentage)
+top_10 <- top_10[, c("species", "tpm")]
+top_10$percentage <- (top_10$tpm / s_total_TPM) * 100
+top10_total_tpm <- sum(top_10$percentage)
 other_tpm <- 100 - top10_total_tpm # calculate other
-other_row <- data.frame(Species = "Other", TPM = 0, Percentage = other_tpm) # make new row
+other_row <- data.frame(species = "Other", tpm = 0, percentage = other_tpm) # make new row
+top_10 <- top_10[, c("species", "tpm", "percentage")]
 new_species <- rbind(top_10, other_row) # merge row into species data
 
 colours <- c('#0079bf', 
@@ -60,12 +75,12 @@ colours <- c('#0079bf',
 species_freq <- table(new_species$Species)
 sorted_species <- names(sort(species_freq, decreasing = TRUE))
 sorted_species <- c(sorted_species[sorted_species != "Other"], "Other")
-new_species$Species <- factor(new_species$Species, levels = sorted_species)
+new_speciessSpecies <- factor(new_species$species, levels = sorted_species)
 
 sorted <- mutate(new_species,
-                 species = fct_infreq(new_species$Species, w = new_species$Percentage) |> fct_other(drop = "Other"))
+                 species = fct_infreq(new_species$species, w = new_species$percentage) |> fct_other(drop = "Other"))
 
-donut <- ggplot(sorted, aes(x = 2, y = Percentage, fill=species)) +
+donut <- ggplot(sum_df, aes(x = 2, y = percentage, fill=species)) +
   geom_col() +
   coord_polar(theta = "y") +
   xlim(c(0.5, 2.5)) +
