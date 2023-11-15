@@ -135,7 +135,7 @@ def main():
         "py_hbar_ph": hbar_png
     }
     replace_dict.update(update_dict)
-    gen_pdf.pdf_template(outdir, replace_dict)
+    gen_pdf.pdf_template(outdir, replace_dict, used_reference)
 
 
 if __name__ == "__main__":
