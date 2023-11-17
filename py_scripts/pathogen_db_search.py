@@ -70,6 +70,10 @@ def pathogen_search(species_list, dk_status):
             species_ph = f"py_pspecies{i}_ph"
             status_ph = f"py_pspecies{i}status_ph"
             zscore_ph = f"py_pspecies{i}zscore_ph"
+        if dk_status == "Top10":
+            species_ph = f"py_tspecies{i}_ph"
+            status_ph = f"py_tspecies{i}status_ph"
+            zscore_ph = f"py_tspecies{i}zscore_ph"
         species_dict[species_ph] = species
         status_dict[status_ph] = species.replace(" \u2757", " ") + status
     
