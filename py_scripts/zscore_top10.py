@@ -14,24 +14,29 @@ def read_in_tpm(tpm_file):
     parasites_db = pd.read_csv(os.path.join(os.path.dirname(os.path.dirname(__file__)), "database/parasites.txt"), sep = "\t" , header = 0)
     input_file = pd.read_csv(tpm_file)
     tpm_input = input_file[input_file["phylum"].str.contains("Chordata")==False]
-    tpm_input = tpm_input[tpm_input['ranked_score'] > 1]
+    tpm_input = tpm_input[tpm_input['zscore'] > 1]
+    tpm_input = tpm_input.sort_values(by=['zscore', 'rpm_sample',], ascending=[False, False]).dropna(subset='species')
+    top10only = tpm_input['species'][:10].reset_index(drop=True)
+
     d_bacteria = tpm_input[
         tpm_input['superkingdom'].str.contains("Bacteria")][:10].reset_index(drop=True)
     d_viruses = tpm_input[tpm_input['superkingdom'].str.contains("Viruses")][:10].reset_index(drop=True)
     k_fungi = tpm_input[tpm_input['species'].isin(fungi_db['#Organism/Name'])][:10].reset_index(drop=True)
     k_parasite = tpm_input[tpm_input['species'].isin(parasites_db['#Organism/Name'])][:10].reset_index(drop=True)
     for tpm_df in [d_bacteria, d_viruses, k_fungi, k_parasite]:
-        tpm_df.sort_values(by="tpm", ascending = False)
+        tpm_df.sort_values(by="rpm_sample", ascending = False)
     bacteria_list = d_bacteria['species'].to_list()
     viruses_list = d_viruses['species'].to_list()
     fungi_list = k_fungi['species'].to_list()
     parasite_list = k_parasite['species'].to_list()
+    top10only_list = top10only.to_list()
     
     kd_list = [
         (bacteria_list, "Bacteria"), 
         (viruses_list, "Viruses"), 
         (fungi_list, "Fungi"), 
-        (parasite_list, "Parasites")
+        (parasite_list, "Parasites"),
+        (top10only_list, "Top10")
     ]
     
     for species_list, dk_status in kd_list:
@@ -46,7 +51,7 @@ def get_ranked_score(og_df, species_list, dk_status):
     for i, species in enumerate(species_list, start = 1):
         if species != '-':
             match_row = og_df.loc[og_df['species'] == species]
-            ranked_score = round(match_row['ranked_score'].values[0], 2)
+            ranked_score = round(match_row['zscore'].values[0], 2)
         else: 
             ranked_score = '-'
         if dk_status == "Bacteria":
@@ -57,5 +62,7 @@ def get_ranked_score(og_df, species_list, dk_status):
             zscore_ph = f"py_fspecies{i}zscore_ph"
         if dk_status == "Parasites":
             zscore_ph = f"py_pspecies{i}zscore_ph"
+        if dk_status == "Top10":
+            zscore_ph = f"py_tspecies{i}zscore_ph"
         score_dict[zscore_ph] = ranked_score
     return score_dict
