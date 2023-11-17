@@ -1,7 +1,9 @@
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from reportlab.lib import utils, colors
-from reportlab.platypus import Table, TableStyle
+from reportlab.lib import utils
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Table, TableStyle, Paragraph
+import numpy as np
 
 def pdf_template(outdir, in_dict, used_reference):
     outpath = outdir + "/report.pdf"
@@ -175,15 +177,93 @@ def pdf_template(outdir, in_dict, used_reference):
 
 
     # start page two for figures
+    # coverage figure if exists
+    figure_count = 1
+    coverage = False
+    shift_down = 0
+    c.setFont("Helvetica", 8)
     if in_dict['py_coverageimg_ph']:
-
-        c.setFont("Helvetica", 8)
-        figure1 = f"Figure 1: Whole genome coverage map of sequencing reads to {used_reference}"
+        coverage = True
+        figure1 = f"Figure {figure_count}: Whole genome coverage map of sequencing reads to {used_reference}"
+        figure_count += 1
         c.drawString(60, A4[1] - 60, figure1)
     
         coverage_img = utils.ImageReader(in_dict.get("py_coverageimg_ph", ""))
-        c.drawImage(coverage_img, 70, A4[1] / 2 - 50, width=300, height=100, mask="auto")
+        c.drawImage(coverage_img, 60, A4[1] - 220, width=500, height=150, mask="auto")
+        shift_down = 200
+    
+    # hbar image.
+    figure2 = f"Figure {figure_count}: Relative abundance of the Top 10 species following filtering."
+    figure_count += 1
+    
+    c.drawString(60, A4[1] - 60 - shift_down, figure2)
+    hbar_img = utils.ImageReader(in_dict.get("py_hbar_ph", ""))
+    c.drawImage(hbar_img, 60, A4[1] - 180 - shift_down, width=500, height=100, mask="auto")
 
+    # Top10 species table
+    c.setFont("Helvetica-Bold", 8)
+    c.drawString(50, A4[0] - shift_down + 30, f"Top 10 Species")
+    
+    top10 = [
+        'py_tspecies1_ph',
+        'py_tspecies1status_ph',
+        'py_tspecies1zscore_ph',
+        'py_tspecies2_ph',
+        'py_tspecies2status_ph',
+        'py_tspecies3zscore_ph',
+        'py_tspecies3_ph',
+        'py_tspecies3status_ph',
+        'py_tspecies3zscore_ph',
+        'py_tspecies4_ph',
+        'py_tspecies4status_ph',
+        'py_tspecies4zscore_ph',
+        'py_tspecies5_ph',
+        'py_tspecies5status_ph',
+        'py_tspecies5zscore_ph',
+        'py_tspecies6_ph',
+        'py_tspecies6status_ph',
+        'py_tspecies6zscore_ph',
+        'py_tspecies7_ph',
+        'py_tspecies7status_ph',
+        'py_tspecies7zscore_ph',
+        'py_tspecies8_ph',
+        'py_tspecies8status_ph',
+        'py_tspecies8zscore_ph',
+        'py_tspecies9_ph',
+        'py_tspecies9status_ph',
+        'py_tspecies9zscore_ph',
+        'py_tspecies10_ph',
+        'py_tspecies10status_ph',
+        'py_tspecies10zscore_ph',
+    ]
+
+    for text in range(len(top10)):
+
+        for key, value in in_dict.items():
+            # Check if the placeholder contains "zscore"
+            value_str = str(value)
+            value_str = value_str.replace('❗', ' !!')
+            if "zscore" in key and key in top10[text]:
+                top10[text] = top10[text].replace(key, f'Z-score: {value_str}')
+            else:
+                
+                top10[text] = top10[text].replace(key, value_str)
+    
+    
+    table_buffer = A4[0] - shift_down + 10
+    for i, text in enumerate(top10):
+        if i % 3 == 0 or i == 0:
+            c.setFont("Helvetica-Bold", 8)
+            c.drawString(50, table_buffer, text)
+            numlines = 1
+        else:
+            numlines = draw_wrapped_text(c, text, table_buffer, 8)
+        table_buffer -= 12 * numlines
+    """
+    note = f"Note: A Z-Score of 100 is considered statistically significant, the closer the Z-Score is to 1, the species is considered insignificant, or was found within the negative control and considered background species."
+    draw_wrapped_text(c, note, table_buffer - 5, 6)
+    """
+    c.showPage()
     # finished
     c.save()
 
