@@ -40,7 +40,7 @@ def check_input_folder(folder):
         if not file.startswith("."):
             input_files.append(file)
     count_input = len(input_files)
-    if count_input > 7:
+    if count_input > 10:
         logging.critical(f"There more than the expected number of files in {folder}, please double check")
         sys.exit(1)
     for file in input_files:
