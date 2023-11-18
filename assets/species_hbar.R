@@ -21,14 +21,14 @@ species <- read.csv("zscore.csv", header = 1)
 outname <- paste(args[2],"_hbar.png", sep = "")
 dbPath <- args[3]
 #dbPath <- "/Users/wfon4473/Documents/Bioinformatics/metagp_report/database"
-species <- species %>% filter(ranked_score > 1)
+species <- species %>% filter(zscore > 1)
 
 # pre-processing for first hbar
-filt_kingdom <- species[, c("superkingdom", "tpm")] # get kingdom and TPM
-k_total_TPM <- sum(filt_kingdom$tpm)
+filt_kingdom <- species[, c("superkingdom", "rpm_sample")] # get kingdom and rpm
+k_total_rpm <- sum(filt_kingdom$rpm_sample)
 filt_kingdom$superkingdom <- ifelse(filt_kingdom$superkingdom == "", "Other", filt_kingdom$superkingdom)
-sum_df <- aggregate(tpm ~ superkingdom, data = filt_kingdom, FUN = sum)
-sum_df$percentage <- (sum_df$tpm / k_total_TPM) * 100
+sum_df <- aggregate(rpm_sample ~ superkingdom, data = filt_kingdom, FUN = sum)
+sum_df$percentage <- (sum_df$rpm_sample / k_total_rpm) * 100
 
 kingdom_freq <- table(sum_df$superkingdom)
 sorted_kingdom <- names(sort(kingdom_freq, decreasing = TRUE))
@@ -49,15 +49,16 @@ parasite_species <- parasite_db$X.Organism.Name
 kingdoms <- c("Bacteria", "Viruses")
 selected <- species[species$species %in% c(fungi_species, parasite_species) | species$superkingdom %in% kingdoms, ]
 selected <- subset(selected, phylum != "Chordata" & genus != "Unknown")
-s_total_TPM <- sum(species$tpm) # total excluding Chordata & Unknowns
-sorted <- selected[order(selected$tpm, decreasing = TRUE), ]
+s_total_rpm <- sum(species$rpm_sample) # total excluding Chordata & Unknowns
+sorted <- selected[order(selected$rpm_sample, decreasing = TRUE), ]
+sorted <- subset(sorted, !is.na(species) & species != "")
 top_10 <- head(sorted, 10)
-top_10 <- top_10[, c("species", "tpm")]
-top_10$percentage <- (top_10$tpm / s_total_TPM) * 100
-top10_total_tpm <- sum(top_10$percentage)
-other_tpm <- 100 - top10_total_tpm # calculate other
-other_row <- data.frame(species = "Other", tpm = 0, percentage = other_tpm) # make new row
-top_10 <- top_10[, c("species", "tpm", "percentage")]
+top_10 <- top_10[, c("species", "rpm_sample")]
+top_10$percentage <- (top_10$rpm_sample / s_total_rpm) * 100
+top10_total_rpm <- sum(top_10$percentage)
+other_rpm <- 100 - top10_total_rpm # calculate other
+other_row <- data.frame(species = "Other", rpm_sample = 0, percentage = other_rpm) # make new row
+top_10 <- top_10[, c("species", "rpm_sample", "percentage")]
 new_species <- rbind(top_10, other_row) # merge row into species data
 
 

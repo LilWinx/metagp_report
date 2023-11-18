@@ -17,18 +17,18 @@ wd <- args[1]
 #wd <- "~/Documents/R_workdir"
 setwd(dir = wd)
 species <- read.csv("zscore.csv", header = 1)
-#outname <- "output_hbar.png"
-outname <- paste(args[2],"_hbar.png", sep = "")
+#outname <- "output_donut.png"
+outname <- paste(args[2],"_donut.png", sep = "")
 dbPath <- args[3]
 #dbPath <- "/Users/wfon4473/Documents/Bioinformatics/metagp_report/database"
-species <- species %>% filter(ranked_score > 1)
+species <- species %>% filter(zscore > 1)
 
 # pre-processing for first hbar
-filt_kingdom <- species[, c("superkingdom", "tpm")] # get kingdom and TPM
-k_total_TPM <- sum(filt_kingdom$tpm)
+filt_kingdom <- species[, c("superkingdom", "rpm_sample")] # get kingdom and rpm
+k_total_rpm <- sum(filt_kingdom$rpm_sample)
 filt_kingdom$superkingdom <- ifelse(filt_kingdom$superkingdom == "", "Other", filt_kingdom$superkingdom)
-sum_df <- aggregate(tpm ~ superkingdom, data = filt_kingdom, FUN = sum)
-sum_df$percentage <- (sum_df$tpm / k_total_TPM) * 100
+sum_df <- aggregate(rpm_sample ~ superkingdom, data = filt_kingdom, FUN = sum)
+sum_df$percentage <- (sum_df$rpm_sample / k_total_rpm) * 100
 
 kingdom_freq <- table(sum_df$superkingdom)
 sorted_kingdom <- names(sort(kingdom_freq, decreasing = TRUE))
@@ -44,20 +44,19 @@ parasite_db_path <- paste(dbPath,"/parasites.txt", sep = "")
 parasite_db <- read.csv(parasite_db_path, header = 1, sep = "\t")
 parasite_species <- parasite_db$X.Organism.Name
 
-
-
 kingdoms <- c("Bacteria", "Viruses")
 selected <- species[species$species %in% c(fungi_species, parasite_species) | species$superkingdom %in% kingdoms, ]
 selected <- subset(selected, phylum != "Chordata" & genus != "Unknown")
-s_total_TPM <- sum(species$tpm) # total excluding Chordata & Unknowns
-sorted <- selected[order(selected$tpm, decreasing = TRUE), ]
+s_total_rpm <- sum(species$rpm_sample) # total excluding Chordata & Unknowns
+sorted <- selected[order(selected$rpm_sample, decreasing = TRUE), ]
+sorted <- subset(sorted, !is.na(species) & species != "")
 top_10 <- head(sorted, 10)
-top_10 <- top_10[, c("species", "tpm")]
-top_10$percentage <- (top_10$tpm / s_total_TPM) * 100
-top10_total_tpm <- sum(top_10$percentage)
-other_tpm <- 100 - top10_total_tpm # calculate other
-other_row <- data.frame(species = "Other", tpm = 0, percentage = other_tpm) # make new row
-top_10 <- top_10[, c("species", "tpm", "percentage")]
+top_10 <- top_10[, c("species", "rpm_sample")]
+top_10$percentage <- (top_10$rpm_sample / s_total_rpm) * 100
+top10_total_rpm <- sum(top_10$percentage)
+other_rpm <- 100 - top10_total_rpm # calculate other
+other_row <- data.frame(species = "Other", rpm_sample = 0, percentage = other_rpm) # make new row
+top_10 <- top_10[, c("species", "rpm_sample", "percentage")]
 new_species <- rbind(top_10, other_row) # merge row into species data
 
 colours <- c('#0079bf', 
@@ -72,7 +71,7 @@ colours <- c('#0079bf',
              '#bc9b6a',
              '#c4c9cc')
 
-species_freq <- table(new_species$Species)
+species_freq <- table(new_species$species)
 sorted_species <- names(sort(species_freq, decreasing = TRUE))
 sorted_species <- c(sorted_species[sorted_species != "Other"], "Other")
 new_speciessSpecies <- factor(new_species$species, levels = sorted_species)
@@ -80,7 +79,7 @@ new_speciessSpecies <- factor(new_species$species, levels = sorted_species)
 sorted <- mutate(new_species,
                  species = fct_infreq(new_species$species, w = new_species$percentage) |> fct_other(drop = "Other"))
 
-donut <- ggplot(sum_df, aes(x = 2, y = percentage, fill=species)) +
+donut <- ggplot(sorted, aes(x = 2, y = percentage, fill=species)) +
   geom_col() +
   coord_polar(theta = "y") +
   xlim(c(0.5, 2.5)) +
