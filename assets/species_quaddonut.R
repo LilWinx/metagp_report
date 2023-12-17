@@ -22,8 +22,8 @@ rna_species <- read.csv(args[2], header = 1)
 #rna_species <- read.csv("~/Documents/R_workdir/CzRna5565/zscore.csv", header = 1)
 dna_species <- read.csv(args[3], header = 1)
 #dna_species <- read.csv("~/Documents/R_workdir/CzDna5565/zscore.csv", header = 1)
-utname <- "output_hbar.png"
-outname <- paste(args[4],"_hbar.png", sep = "")
+#outname <- "output_quaddonut.png"
+outname <- paste(args[4],"_quaddonut.png", sep = "")
 dbPath <- args[5]
 #dbPath <- "/Users/wfon4473/Documents/Bioinformatics/metagp_report/database"
 rna_species <- rna_species %>% filter(zscore > 1)
@@ -175,13 +175,13 @@ rna_species_donut <- species_donut(rna_species_df, "RNA")
 dna_species_donut <- species_donut(dna_species_df, "DNA")
 
 # combine donuts
-kingdom <- rna_kingdom_donut / plot_spacer() / dna_kingdom_donut +
-  plot_layout(ncol = 1, heights = c(0.1,0.02,0.2), guides = "collect") + 
+kingdom <- (rna_kingdom_donut + theme(plot.margin = unit(c(0,0,70,0), "pt"))) / (dna_kingdom_donut + theme(plot.margin = unit(c(0,0,0,0), "pt")))+
+  plot_layout(ncol = 1, heights = c(0.3,0.7), guides = "collect") + 
   plot_annotation(theme = theme(
         plot.background = element_rect(fill = "transparent", color = NA)
       )) & theme(legend.position = 'bottom')
-species <- rna_species_donut / plot_spacer() / dna_species_donut +
-  plot_layout(ncol = 1, heights = c(3,-0.5,3)) +
+species <- (rna_species_donut + theme(plot.margin = unit(c(0,0,0,0), "pt"))) / (dna_species_donut + theme(plot.margin = unit(c(0,0,0,0), "pt")))+
+  plot_layout(ncol = 1, heights = c(3,3)) +
   plot_annotation(theme = theme(
     plot.background = element_rect(fill = "transparent", color = NA)
   )) & theme(legend.position = 'right')
@@ -190,7 +190,7 @@ p <- plot_grid(kingdom, NULL, species, ncol = 3, nrow = 1, rel_widths = c(1, -0.
 
 ggsave(outname,
        width = 1300,
-       height = 1500,
+       height = 1400,
        units = "px",
        dpi = 300,
        scale = 1.7,
