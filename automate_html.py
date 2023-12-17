@@ -12,6 +12,7 @@ from py_scripts import pathogen_db_search
 from py_scripts import result_interpret
 #from py_scripts import tpmAbundances_top10
 from py_scripts import zscore_top10
+from py_scripts import merge_natype
 
 
 __version__ = "0.0.1"
@@ -41,22 +42,26 @@ def main():
 
     assists.check_folders(args.input)
     file_list = assists.check_input_folder(args.input)
+
+    na_type = None
+    if args.natype == "both":
+        found_list = assists.check_na_files(args.input)
+        tpm_file = merge_natype.merge_dna_and_rna(found_list)
+    elif args.natype == "dna":
+        na_type == "DNA"
+    elif args.natype == "rna":
+        na_type == "RNA"
+    else:
+        na_type == None
+
     coverage_png = None
     div_base64_cov_png = ""
     used_reference = ""
+    fig_no = 1
+    img_type = None
     for file in file_list:
         if file.startswith("MetaGP") and file.endswith(".csv"):
             patient_data = result_interpret.clinican_results(os.path.join(args.input, file), args.wgsid)
-        elif file.endswith(".html"):
-            iframe_krona = os.path.join(args.input, file)
-            base64_krona = base64_encode.html_base64_encode(iframe_krona)
-        elif file.endswith("_hbar.png"):
-            hbar_png = os.path.join(args.input, file)
-            base64_hbar_png = base64_encode.html_base64_encode(hbar_png)
-        elif file.endswith("zscore.csv"):
-            tpm_file = os.path.join(args.input, file)
-            db_accordion = zscore_top10.read_in_tpm(tpm_file)
-            #db_accordion = tpmAbundances_top10.read_in_tpm(tpm_file)
         elif file.endswith("_coverageplot.png"):
             coverage_png = os.path.join(args.input, file)
             covstats = os.path.join(args.input, "coverage_ref.cov_stats")
@@ -68,13 +73,65 @@ def main():
             div_base64_cov_png = f'''
                 <div class="coverage_plot">
                     <p style="padding-left: 10px; font-size: 12px">
-                        <b>Figure 1:</b> Whole genome coverage map of sequencing reads to {used_reference}.
+                        <b>Figure {fig_no}:</b> Whole genome coverage map of sequencing reads to {used_reference}.
                     </p>
                     <div class="centre_img">
-                        <img src="data:image/png;base64, {base64_cov_png}">
+                        <img src="data:image/png;base64, {base64_cov_png}" class="covplot">
                         <br>
                     </div>
                 </div>
+            '''
+            fig_no += 1
+        elif file.endswith("_hbar.png"):
+            hbar_png = os.path.join(args.input, file)
+            base64_hbar_png = base64_encode.html_base64_encode(hbar_png)
+            div_hbar_cov_png = f'''
+            <div>
+                <p style="padding-left: 10px; font-size: 12px">
+                    <b>Figure {fig_no}:</b> Relative abundance of the Top 10 species following filtering.
+                </p>
+                <br>
+                <div class="centre_img">
+                    <img src="data:image/png;base64, {base64_hbar_png}" class="covplot">
+                </div>
+                <br>      
+            </div>
+            '''
+            fig_no += 1
+            img_type = "hbar"
+        elif file.endswith("_quaddonut.png"):
+            hbar_png = os.path.join(args.input, file)
+            base64_qd_png = base64_encode.html_base64_encode(hbar_png)
+            div_hbar_cov_png = f'''
+            <div>
+                <p style="padding-left: 10px; font-size: 12px">
+                    <b>Figure {fig_no}:</b> Relative abundance of the Top 10 species following filtering from both DNA and RNA mNGS.
+                </p>
+                <br>
+                <div class="centre_img">
+                    <img src="data:image/png;base64, {base64_qd_png}" class="donut">
+                </div>
+                <br>      
+            </div>
+            '''
+            fig_no += 1
+            img_type = "donut"
+        elif file.endswith("zscore.csv"):
+            if args.natype == "dna" or args.natype == "rna" and na_type != None:
+                tpm_file = os.path.join(args.input, file)
+                assists.load_csv(tpm_file)
+                db_accordion = zscore_top10.read_in_tpm(tpm_file, na_type)
+            else:
+                db_accordion = zscore_top10.read_in_tpm(tpm_file, na_type)
+        elif file.endswith(".html"):
+            iframe_krona = os.path.join(args.input, file)
+            base64_krona = base64_encode.html_base64_encode(iframe_krona)
+            div_krona_html = f'''
+            <div data-html2canvas-ignore="true" class="krona">
+                <p style="padding-left: 10px;"><b>Figure {fig_no}:</b> Taxonomic Classification of raw sequencing reads.</p>
+                <iframe src="data:text/html;base64,{base64_krona}">
+                </iframe>
+            </div>
             '''
 
     # base64 encode all set images
@@ -101,9 +158,9 @@ def main():
         "py_virus_icon_ph": locals()[base64_images[3]],
         "py_fungi_icon_ph": locals()[base64_images[4]],
         "py_parasite_icon_ph": locals()[base64_images[5]],
-        "py_krona_ph": base64_krona,
+        "py_krona_ph": div_krona_html,
         "py_coverageimg_ph": div_base64_cov_png,
-        "py_hbar_ph": base64_hbar_png
+        "py_hbarordonuts_ph": div_hbar_cov_png
     }
     dictionary_list = [patient_data, db_accordion]
     for dictionary in dictionary_list:
@@ -137,7 +194,7 @@ def main():
         "py_hbar_ph": hbar_png
     }
     replace_dict.update(update_dict)
-    gen_pdf.pdf_template(outdir, replace_dict, used_reference)
+    gen_pdf.pdf_template(outdir, replace_dict, used_reference, img_type)
 
 
 if __name__ == "__main__":

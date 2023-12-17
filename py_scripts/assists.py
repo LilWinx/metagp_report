@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+import pandas as pd
 
 def check_files(file):
     """
@@ -50,5 +51,27 @@ def check_input_folder(folder):
             logging.critical(f"Invalid file type detected please check or remove")
             sys.exit(1)
     return input_files
+
+def load_csv(file):
+    input_file = pd.read_csv(file)
+    return input_file
+
+def check_na_files(folder):
+    keywords = ['CzDna', 'CzRna']
+    file_extension = 'zscore.csv'
+    found_files = []
+    for root, dirs, files in os.walk(folder):
+        for file in files:
+            if any(keyword.lower() in file.lower() for keyword in keywords) and file.lower().endswith(file_extension.lower()):
+                found_files.append(os.path.join(root, file))
+
+    if len(found_files) == 2:
+        logging.info(f"Found both files")
+    else:
+        logging.error(f"Either you have extra files or are missing files")
+    for file in found_files:
+        logging.info(f"{file} is one of the files")
+    return found_files
+
     
         

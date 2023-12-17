@@ -7,22 +7,31 @@ from py_scripts import pathogen_db_search
 # this script will extract the top 10 of each domain/kingdom
 # specifically pulling Bacteria, Viruses, Fungi and Kingdom
 
-def read_in_tpm(tpm_file):
+def read_in_tpm(input_file, na_type):
     accordion_dict = {}
-
     fungi_db = pd.read_csv(os.path.join(os.path.dirname(os.path.dirname(__file__)), "database/fungi.txt"), sep = "\t", header = 0)
     parasites_db = pd.read_csv(os.path.join(os.path.dirname(os.path.dirname(__file__)), "database/parasites.txt"), sep = "\t" , header = 0)
-    input_file = pd.read_csv(tpm_file)
     tpm_input = input_file[input_file["phylum"].str.contains("Chordata")==False]
     tpm_input = tpm_input[tpm_input['zscore'] > 1]
-    tpm_input = tpm_input.sort_values(by=['zscore', 'rpm_sample',], ascending=[False, False]).dropna(subset='species')
-    top10only = tpm_input['species'][:10].reset_index(drop=True)
+    tpm_input = tpm_input.sort_values(by=['zscore', 'rpm_sample',], ascending=[False, False]).dropna(subset='species').drop_duplicates(subset='species')
+    top10only = top10only = tpm_input[tpm_input['zscore'] > 50].nlargest(10, 'zscore')['species'].reset_index(drop=True)
+    if na_type == "DNA" or na_type == "RNA":
+        top10only['na_type'] == na_type
+    else:
+        pass
 
-    d_bacteria = tpm_input[
-        tpm_input['superkingdom'].str.contains("Bacteria")][:10].reset_index(drop=True)
-    d_viruses = tpm_input[tpm_input['superkingdom'].str.contains("Viruses")][:10].reset_index(drop=True)
-    k_fungi = tpm_input[tpm_input['species'].isin(fungi_db['#Organism/Name'])][:10].reset_index(drop=True)
-    k_parasite = tpm_input[tpm_input['species'].isin(parasites_db['#Organism/Name'])][:10].reset_index(drop=True)
+    # Filter and select top 10 for Bacteria with zscore > 50
+    d_bacteria = tpm_input[tpm_input['superkingdom'].str.contains("Bacteria") & (tpm_input['zscore'] > 50)].nlargest(10, 'zscore').reset_index(drop=True)
+
+    # Filter and select top 10 for Viruses with zscore > 50
+    d_viruses = tpm_input[tpm_input['superkingdom'].str.contains("Viruses") & (tpm_input['zscore'] > 50)].nlargest(10, 'zscore').reset_index(drop=True)
+
+    # Filter and select top 10 for Fungi with zscore > 50
+    k_fungi = tpm_input[tpm_input['species'].isin(fungi_db['#Organism/Name']) & (tpm_input['zscore'] > 50)].nlargest(10, 'zscore').reset_index(drop=True)
+
+    # Filter and select top 10 for Parasites with zscore > 50
+    k_parasite = tpm_input[tpm_input['species'].isin(parasites_db['#Organism/Name']) & (tpm_input['zscore'] > 50)].nlargest(10, 'zscore').reset_index(drop=True)
+
     for tpm_df in [d_bacteria, d_viruses, k_fungi, k_parasite]:
         tpm_df.sort_values(by="rpm_sample", ascending = False)
     bacteria_list = d_bacteria['species'].to_list()
@@ -48,12 +57,15 @@ def read_in_tpm(tpm_file):
 
 def get_ranked_score(og_df, species_list, dk_status):
     score_dict = {}
+    na_type = "-"
     for i, species in enumerate(species_list, start = 1):
         if species != '-':
             match_row = og_df.loc[og_df['species'] == species]
             ranked_score = round(match_row['zscore'].values[0], 2)
+            na_type = match_row['na_type'].values[0]
         else: 
             ranked_score = '-'
+            na_type = '-'
         if dk_status == "Bacteria":
             zscore_ph = f"py_species{i}zscore_ph"
         if dk_status == "Viruses":
@@ -64,5 +76,5 @@ def get_ranked_score(og_df, species_list, dk_status):
             zscore_ph = f"py_pspecies{i}zscore_ph"
         if dk_status == "Top10":
             zscore_ph = f"py_tspecies{i}zscore_ph"
-        score_dict[zscore_ph] = ranked_score
+        score_dict[zscore_ph] = f"Z-score: {ranked_score} | Result NA Type: {na_type}"
     return score_dict

@@ -5,7 +5,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Table, TableStyle, Paragraph
 import numpy as np
 
-def pdf_template(outdir, in_dict, used_reference):
+def pdf_template(outdir, in_dict, used_reference, img_type):
     outpath = outdir + "/report.pdf"
     c = canvas.Canvas(outpath, pagesize=A4)
 
@@ -193,16 +193,30 @@ def pdf_template(outdir, in_dict, used_reference):
         shift_down = 200
     
     # hbar image.
-    figure2 = f"Figure {figure_count}: Relative abundance of the Top 10 species following filtering."
-    figure_count += 1
-    
-    c.drawString(60, A4[1] - 60 - shift_down, figure2)
-    hbar_img = utils.ImageReader(in_dict.get("py_hbar_ph", ""))
-    c.drawImage(hbar_img, 60, A4[1] - 180 - shift_down, width=500, height=100, mask="auto")
+    if img_type == "hbar":
+        figure2 = f"Figure {figure_count}: Relative abundance of the Top 10 species following filtering."
+        figure_count += 1
+        
+        c.drawString(60, A4[1] - 60 - shift_down, figure2)
+        hbar_img = utils.ImageReader(in_dict.get("py_hbar_ph", ""))
+        c.drawImage(hbar_img, 60, A4[1] - 180 - shift_down, width=500, height=100, mask="auto")
+    elif img_type == "donut":
+        figure2 = f"Figure {figure_count}: Relative abundance of the Top 10 species following filtering from both DNA and RNA mNGS."
+        figure_count += 1
+        
+        c.drawString(60, A4[1] - 60 - shift_down, figure2)
+        hbar_img = utils.ImageReader(in_dict.get("py_hbar_ph", ""))
+        c.drawImage(hbar_img, 60, A4[1] - 520 - shift_down, width=400, height=450, mask="auto")
+    else:
+        pass
 
+    # end page 2
+    c.showPage()
+    
     # Top10 species table
+    shift_down = 0
     c.setFont("Helvetica-Bold", 8)
-    c.drawString(50, A4[0] - shift_down + 30, f"Top 10 Species")
+    c.drawString(50, A4[1] - 60, f"Top 10 Species")
     
     top10 = [
         'py_tspecies1_ph',
@@ -250,7 +264,7 @@ def pdf_template(outdir, in_dict, used_reference):
                 top10[text] = top10[text].replace(key, value_str)
     
     
-    table_buffer = A4[0] - shift_down + 10
+    table_buffer = A4[1] - 75
     for i, text in enumerate(top10):
         if i % 3 == 0 or i == 0:
             c.setFont("Helvetica-Bold", 8)
@@ -263,10 +277,13 @@ def pdf_template(outdir, in_dict, used_reference):
     note = f"Note: A Z-Score of 100 is considered statistically significant, the closer the Z-Score is to 1, the species is considered insignificant, or was found within the negative control and considered background species."
     draw_wrapped_text(c, note, table_buffer - 5, 6)
     """
+
     c.showPage()
+
+    
     # finished
     c.save()
-
+    
 def draw_wrapped_text(c, text, y, font_size):
     # Set the font and font size
     x = 50
