@@ -268,6 +268,11 @@ def pdf_template(outdir, in_dict, used_reference, img_type):
     for i, text in enumerate(top10):
         if i % 3 == 0 or i == 0:
             c.setFont("Helvetica-Bold", 8)
+            if "-" not in text:
+                text_color = "black"
+            else:
+                text_color = "white"
+            c.setFillColor(text_color)
             c.drawString(50, table_buffer, text)
             numlines = 1
         else:
