@@ -224,7 +224,7 @@ def pdf_template(outdir, in_dict, used_reference, img_type):
         'py_tspecies1zscore_ph',
         'py_tspecies2_ph',
         'py_tspecies2status_ph',
-        'py_tspecies3zscore_ph',
+        'py_tspecies2zscore_ph',
         'py_tspecies3_ph',
         'py_tspecies3status_ph',
         'py_tspecies3zscore_ph',
