@@ -89,11 +89,11 @@ top10species <- function(species) {
 
 # COLOURS
 kcolours <- c(
-  '#ef476f',
-  '#ffd166',
-  '#06d6a0',
-  '#118ab2',
-  '#c4c9cc'
+  Archaea = '#ef476f',
+  Bacteria = '#ffd166',
+  Eukaryota = '#06d6a0',
+  Viruses = '#118ab2',
+  Other = '#c4c9cc'
 )
 
 colours <- c('#0079bf', 
@@ -106,7 +106,8 @@ colours <- c('#0079bf',
              '#00c2e0', 
              '#51e898',
              '#bc9b6a',
-             '#c4c9cc')
+             '#c4c9cc'
+)
 
 # Draw the kingdom plot
 rna_kingdom_df <- kingdom_process(rna_species)
@@ -189,7 +190,7 @@ species <- (rna_species_donut + theme(plot.margin = unit(c(0,0,0,0), "pt"))) / (
 p <- plot_grid(kingdom, NULL, species, ncol = 3, nrow = 1, rel_widths = c(1, -0.5, 4))
 
 ggsave(outname,
-       width = 1300,
+       width = 1400,
        height = 1400,
        units = "px",
        dpi = 300,
