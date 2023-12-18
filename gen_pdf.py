@@ -258,7 +258,7 @@ def pdf_template(outdir, in_dict, used_reference, img_type):
             value_str = str(value)
             value_str = value_str.replace('❗', ' !!')
             if "zscore" in key and key in top10[text]:
-                top10[text] = top10[text].replace(key, f'Z-score: {value_str}')
+                top10[text] = top10[text].replace(key, f'{value_str}')
             else:
                 
                 top10[text] = top10[text].replace(key, value_str)
