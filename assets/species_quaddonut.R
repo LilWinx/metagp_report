@@ -194,6 +194,6 @@ ggsave(outname,
        height = 1400,
        units = "px",
        dpi = 300,
-       scale = 1.7,
+       scale = 1.5,
        bg = "transparent")
 
