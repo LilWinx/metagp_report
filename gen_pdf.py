@@ -201,12 +201,12 @@ def pdf_template(outdir, in_dict, used_reference, img_type):
         hbar_img = utils.ImageReader(in_dict.get("py_hbar_ph", ""))
         c.drawImage(hbar_img, 60, A4[1] - 180 - shift_down, width=500, height=100, mask="auto")
     elif img_type == "donut":
-        figure2 = f"Figure {figure_count}: Relative abundance of the Top 10 species following filtering from both DNA and RNA mNGS."
+        figure2 = f"Figure {figure_count}: Relative abundance of the Top 10 species following filtering from both DNA and RNA mNGS. Only showing Z-score > 50"
         figure_count += 1
         
         c.drawString(60, A4[1] - 60 - shift_down, figure2)
         hbar_img = utils.ImageReader(in_dict.get("py_hbar_ph", ""))
-        c.drawImage(hbar_img, 60, A4[1] - 520 - shift_down, width=400, height=450, mask="auto")
+        c.drawImage(hbar_img, 60, A4[1] - 520 - shift_down, width=450, height=450, mask="auto")
     else:
         pass
 
