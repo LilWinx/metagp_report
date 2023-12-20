@@ -12,9 +12,13 @@ Script specifically to control the merge of zscore csv from both RNA and DNA
 
 
 def merge_dna_and_rna(found_list):
-    dna_file = next((file for file in found_list if 'CzDna' in file), None)
+    for file_path in found_list:
+        file_name = os.path.basename(file_path)
+        if file_name.startswith("CzDna"):
+            dna_file = file_path
+        elif file_name.startswith("CzRna"):
+            rna_file = file_path
     logging.info(f"DNA file: {dna_file}")
-    rna_file = next((file for file in found_list if 'CzRna' in file), None)
     logging.info(f"RNA file: {rna_file}")
     dna_df = assists.load_csv(dna_file)
     rna_df = assists.load_csv(rna_file)
