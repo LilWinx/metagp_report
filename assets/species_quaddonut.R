@@ -15,17 +15,17 @@ library(patchwork)
 library(cowplot)
 
 args <- commandArgs(trailingOnly = TRUE)
-wd <- args[1]
-#wd <- "~/Documents/R_workdir"
+#wd <- args[1]
+wd <- "~/Documents/R_workdir"
 setwd(dir = wd)
-rna_species <- read.csv(args[2], header = 1)
-#rna_species <- read.csv("~/Documents/R_workdir/CzRna5565/zscore.csv", header = 1)
-dna_species <- read.csv(args[3], header = 1)
-#dna_species <- read.csv("~/Documents/R_workdir/CzDna5565/zscore.csv", header = 1)
-#outname <- "output_quaddonut.png"
-outname <- paste(args[4],"_quaddonut.png", sep = "")
-dbPath <- args[5]
-#dbPath <- "/Users/wfon4473/Documents/Bioinformatics/metagp_report/database"
+#rna_species <- read.csv(args[2], header = 1)
+rna_species <- read.csv("~/Documents/R_workdir/CzRna5565/zscore.csv", header = 1)
+#dna_species <- read.csv(args[3], header = 1)
+dna_species <- read.csv("~/Documents/R_workdir/CzDna5565/zscore.csv", header = 1)
+outname <- "output_quaddonut.png"
+#outname <- paste(args[4],"_quaddonut.png", sep = "")
+#dbPath <- args[5]
+dbPath <- "/Users/wfon4473/Documents/Bioinformatics/metagp_report/database"
 rna_species <- rna_species %>% filter(zscore > 1)
 
 # set-up fungi database
@@ -67,7 +67,9 @@ top10species <- function(species) {
     slice(which.max(zscore)) %>%
     ungroup()
   sorted <- sorted[order(sorted$zscore, decreasing = TRUE), ]
-  top_10 <- head(sorted, 10)
+  top_10 <- sorted %>%
+    filter(zscore > 50) %>%
+    head(10)
   top_10 <- top_10[, c("species", "rpm_sample")]
   top_10$percentage <- (top_10$rpm_sample / s_total_rpm) * 100
   top10_total_rpm <- sum(top_10$percentage)
@@ -105,9 +107,29 @@ colours <- c('#0079bf',
              '#ff78cb', 
              '#00c2e0', 
              '#51e898',
-             '#bc9b6a',
-             '#c4c9cc'
+             '#bc9b6a'
 )
+
+generate_colors <- function(n) {
+  colours <- c('#0079bf', 
+               '#70b500', 
+               '#ff9f1a', 
+               '#eb5a46', 
+               '#f2d600', 
+               '#c377e0', 
+               '#ff78cb', 
+               '#00c2e0', 
+               '#51e898',
+               '#bc9b6a'
+  )
+  
+  if (n <= length(colours)) {
+    return(c(colours[1:n], Other = '#c4c9cc'))
+  } else {
+    dynamic_colors <- rainbow(n - 1)
+    return(c(dynamic_colors, Other = '#c4c9cc'))
+  }
+}
 
 # Draw the kingdom plot
 rna_kingdom_df <- kingdom_process(rna_species)
@@ -145,13 +167,18 @@ dna_kingdom_donut <- kingdom_donut(dna_kingdom_df)
 
 # Draw the species plot
 rna_species_df <- top10species(rna_species)
+rna_n <- nrow(rna_species_df) - 1
 dna_species_df <- top10species(dna_species)
+dna_n <- nrow(dna_species_df) - 1
 
-species_donut <- function(species_df, na_type) { donut <- ggplot(species_df, aes(x = 2, y = percentage, fill=species)) +
+rna_colours <- generate_colors(rna_n)
+dna_colours <- generate_colors(dna_n)
+
+species_donut <- function(species_df, na_type, na_colours) { donut <- ggplot(species_df, aes(x = 2, y = percentage, fill=species)) +
   geom_col() +
   coord_polar(theta = "y") +
   xlim(c(0.5, 2.5)) +
-  scale_fill_manual(values = colours, name = "Species") +
+  scale_fill_manual(values = setNames(na_colours, levels(species_df$species)), name = "Species") +
   theme_void() +
   guides(fill = guide_legend(keywidth = 0.7, keyheight = 0.7)) +
   theme(legend.position="right", 
@@ -172,8 +199,8 @@ species_donut <- function(species_df, na_type) { donut <- ggplot(species_df, aes
   return(donut)  
   }
 
-rna_species_donut <- species_donut(rna_species_df, "RNA")
-dna_species_donut <- species_donut(dna_species_df, "DNA")
+rna_species_donut <- species_donut(rna_species_df, "RNA", rna_colours)
+dna_species_donut <- species_donut(dna_species_df, "DNA", dna_colours)
 
 # combine donuts
 kingdom <- (rna_kingdom_donut + theme(plot.margin = unit(c(0,0,70,0), "pt"))) / (dna_kingdom_donut + theme(plot.margin = unit(c(0,0,0,0), "pt")))+
@@ -190,10 +217,10 @@ species <- (rna_species_donut + theme(plot.margin = unit(c(0,0,0,0), "pt"))) / (
 p <- plot_grid(kingdom, NULL, species, ncol = 3, nrow = 1, rel_widths = c(1, -0.5, 4))
 
 ggsave(outname,
-       width = 1400,
+       width = 140,
        height = 1400,
        units = "px",
        dpi = 300,
-       scale = 1.5,
+       scale = 1.3,
        bg = "transparent")
 
