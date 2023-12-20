@@ -64,7 +64,7 @@ top10species <- function(species) {
   sorted <- subset(selected, !is.na(species) & species != "")
   sorted <- sorted %>%
     group_by(species) %>%
-    slice(which.max(zscore)) %>%
+    summarize(rpm_sample = sum(rpm_sample), zscore = max(zscore)) %>%
     ungroup()
   sorted <- sorted[order(sorted$zscore, decreasing = TRUE), ]
   top_10 <- sorted %>%
