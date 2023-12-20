@@ -15,17 +15,17 @@ library(patchwork)
 library(cowplot)
 
 args <- commandArgs(trailingOnly = TRUE)
-#wd <- args[1]
-wd <- "~/Documents/R_workdir"
+wd <- args[1]
+#wd <- "~/Documents/R_workdir"
 setwd(dir = wd)
-#rna_species <- read.csv(args[2], header = 1)
-rna_species <- read.csv("~/Documents/R_workdir/CzRna5565/zscore.csv", header = 1)
-#dna_species <- read.csv(args[3], header = 1)
-dna_species <- read.csv("~/Documents/R_workdir/CzDna5565/zscore.csv", header = 1)
-outname <- "output_quaddonut.png"
-#outname <- paste(args[4],"_quaddonut.png", sep = "")
-#dbPath <- args[5]
-dbPath <- "/Users/wfon4473/Documents/Bioinformatics/metagp_report/database"
+rna_species <- read.csv(args[2], header = 1)
+#rna_species <- read.csv("~/Documents/R_workdir/CzRna5565/zscore.csv", header = 1)
+dna_species <- read.csv(args[3], header = 1)
+#dna_species <- read.csv("~/Documents/R_workdir/CzDna5565/zscore.csv", header = 1)
+#outname <- "output_quaddonut.png"
+outname <- paste(args[4],"_quaddonut.png", sep = "")
+dbPath <- args[5]
+#dbPath <- "/Users/wfon4473/Documents/Bioinformatics/metagp_report/database"
 rna_species <- rna_species %>% filter(zscore > 1)
 
 # set-up fungi database
@@ -217,7 +217,7 @@ species <- (rna_species_donut + theme(plot.margin = unit(c(0,0,0,0), "pt"))) / (
 p <- plot_grid(kingdom, NULL, species, ncol = 3, nrow = 1, rel_widths = c(1, -0.5, 4))
 
 ggsave(outname,
-       width = 140,
+       width = 1400,
        height = 1400,
        units = "px",
        dpi = 300,
