@@ -61,7 +61,8 @@ def clinican_results(file, wgsid):
         4.0: "ONT Rapid Barcoding Kit",
         5.0: "RAPIDPrep Protocol",
         6.0: "NEBNext Ultra II RNA Library Prep Kit for Illumina",
-        7.0: "NEBNext Ultra II DNA Library Prep Kit for Illumina"
+        7.0: "NEBNext Ultra II DNA Library Prep Kit for Illumina",
+        8.0: "NEBNext Ultra II RNA & DNA Library Prep Kit for Illumina"
     }
 
     seq_platorm_dict = {
