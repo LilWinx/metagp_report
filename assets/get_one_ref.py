@@ -14,10 +14,11 @@ logger = logging.getLogger()
 Entrez.email = "winkie.fong@sydney.edu.au"
 Entrez.api_key = "dfa1ec2df7ac97add34b8fdec4d128a58a09"
 
+
 query = sys.argv[1]
 outdir = sys.argv[2]
-#db = "/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/db/full-ncbi-list.txt"
-db = "/project/MetaGP/ncbi_db/full-ncbi-list.txt"
+db = "/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/db/full-ncbi-list.txt"
+#db = "/project/MetaGP/ncbi_db/full-ncbi-list.txt"
 
 def search_query(query):
     ftp_path = None
@@ -63,8 +64,15 @@ def get_ftp_path(terms):
             assembly_summary = Entrez.read(assembly_handle)
             assembly_handle.close()
             logging.info(f"searching for {assembly_id}")
+            ftp_path_refseq = assembly_summary["DocumentSummarySet"]["DocumentSummary"][0]["FtpPath_RefSeq"]
 
-            ftp_path = assembly_summary["DocumentSummarySet"]["DocumentSummary"][0]["FtpPath_RefSeq"]
+            if ftp_path_refseq is None or ftp_path_refseq == '':
+                ftp_path = str(assembly_summary["DocumentSummarySet"]["DocumentSummary"][0]["FtpPath_GenBank"])
+                
+            if ftp_path is None or ftp_path == '':
+                logging.error("No FTP path found")
+                sys.exit(2)
+
             ftp_paths.append(ftp_path)
             logging.info(f"found ftp path {ftp_path}")
         except HTTPError:
