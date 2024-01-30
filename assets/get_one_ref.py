@@ -17,8 +17,8 @@ Entrez.api_key = "dfa1ec2df7ac97add34b8fdec4d128a58a09"
 
 query = sys.argv[1]
 outdir = sys.argv[2]
-db = "/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/db/full-ncbi-list.txt"
-#db = "/project/MetaGP/ncbi_db/full-ncbi-list.txt"
+#db = "/Users/wfon4473/Documents/Bioinformatics/all_testdirs/meta-gp_reports_tests/db/full-ncbi-list.txt"
+db = "/project/MetaGP/ncbi_db/full-ncbi-list.txt"
 
 def search_query(query):
     ftp_path = None
@@ -71,7 +71,7 @@ def get_ftp_path(terms):
                 ftp_path = str(assembly_summary["DocumentSummarySet"]["DocumentSummary"][0]["FtpPath_GenBank"])
             else:
                 ftp_path = ftp_path_refseq
-                
+
             if ftp_path is None or ftp_path == '':
                 logging.error("No FTP path found")
                 sys.exit(2)
