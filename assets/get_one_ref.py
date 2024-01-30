@@ -69,6 +69,8 @@ def get_ftp_path(terms):
 
             if ftp_path_refseq is None or ftp_path_refseq == '':
                 ftp_path = str(assembly_summary["DocumentSummarySet"]["DocumentSummary"][0]["FtpPath_GenBank"])
+            else:
+                ftp_path = ftp_path_refseq
                 
             if ftp_path is None or ftp_path == '':
                 logging.error("No FTP path found")
