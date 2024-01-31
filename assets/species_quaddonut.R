@@ -15,17 +15,17 @@ library(patchwork)
 library(cowplot)
 
 args <- commandArgs(trailingOnly = TRUE)
-wd <- args[1]
-#wd <- "~/Documents/R_workdir"
+#wd <- args[1]
+wd <- "~/Documents/R_workdir"
 setwd(dir = wd)
-rna_species <- read.csv(args[2], header = 1)
-#rna_species <- read.csv("~/Documents/R_workdir/CzRna5565/zscore.csv", header = 1)
-dna_species <- read.csv(args[3], header = 1)
-#dna_species <- read.csv("~/Documents/R_workdir/CzDna5565/zscore.csv", header = 1)
-#outname <- "output_quaddonut.png"
-outname <- paste(args[4],"_quaddonut.png", sep = "")
-dbPath <- args[5]
-#dbPath <- "/Users/wfon4473/Documents/Bioinformatics/metagp_report/database"
+#rna_species <- read.csv(args[2], header = 1)
+rna_species <- read.csv("~/Documents/R_workdir/CzRnaSoMuCSF_zscore.csv", header = 1)
+#dna_species <- read.csv(args[3], header = 1)
+dna_species <- read.csv("~/Documents/R_workdir/CzDnaSoMuCSF_zscore.csv", header = 1)
+outname <- "output_quaddonut.png"
+#outname <- paste(args[4],"_quaddonut.png", sep = "")
+#dbPath <- args[5]
+dbPath <- "/Users/wfon4473/Documents/Bioinformatics/metagp_report/database"
 rna_species <- rna_species %>% filter(zscore > 1)
 
 # set-up fungi database
@@ -98,6 +98,13 @@ kcolours <- c(
   Other = '#c4c9cc'
 )
 
+klist <- c(
+  "Archaea",
+  "Bacteria",
+  "Eukaryota",
+  "Viruses",
+  "Other"
+)
 colours <- c('#0079bf', 
              '#70b500', 
              '#ff9f1a', 
@@ -123,7 +130,9 @@ generate_colors <- function(n) {
                '#bc9b6a'
   )
   
-  if (n <= length(colours)) {
+  if (n <= 0) {
+    return(c(Other = '#c4c9cc'))
+  } else if (n <= length(colours)) {
     return(c(colours[1:n], Other = '#c4c9cc'))
   } else {
     dynamic_colors <- rainbow(n - 1)
@@ -140,7 +149,7 @@ kingdom_donut <- function(kingdom_df, na_type) {
     geom_col() +
     coord_polar(theta = "y") +
     xlim(c(0.5, 2.5)) +
-    scale_fill_manual(values = kcolours, name = "Kingdom") +
+    scale_fill_manual(values = kcolours, name = "Kingdom", breaks = klist, limits = klist) +
     theme_void() +
     guides(fill = guide_legend(keywidth = 0.7, keyheight = 0.7)) + 
     theme(
