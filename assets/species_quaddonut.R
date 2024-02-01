@@ -3,7 +3,9 @@ list.of.packages <- c(
   "tidyverse",
   "patchwork",
   "dplyr",
-  "cowplot"
+  "cowplot",
+  "extrafont",
+  "extrafontdb"
 )
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
@@ -13,6 +15,7 @@ library(tidyverse)
 library(dplyr)
 library(patchwork)
 library(cowplot)
+library(extrafont)
 
 args <- commandArgs(trailingOnly = TRUE)
 wd <- args[1]
@@ -155,8 +158,8 @@ kingdom_donut <- function(kingdom_df, na_type) {
     theme(
       legend.position="bottom",
       legend.direction='vertical',
-      legend.text = element_text(size = 7, family = "DejaVu Serif"), 
-      legend.title = element_text(size = 9, family = "DejaVu Serif"),
+      legend.text = element_text(size = 7, family = "Arial"), 
+      legend.title = element_text(size = 9, family = "Arial"),
       panel.background = element_rect(fill = "transparent",
                                       colour = NA_character_),
       panel.grid.major = element_blank(),
@@ -192,8 +195,8 @@ species_donut <- function(species_df, na_type, na_colours) { donut <- ggplot(spe
   guides(fill = guide_legend(keywidth = 0.7, keyheight = 0.7)) +
   theme(
     legend.position="right", 
-      legend.text = element_text(size = 7, family = "DejaVu Serif"), 
-      legend.title = element_text(size = 9, family="DejaVu Serif"),
+      legend.text = element_text(size = 7, family = "Arial"), 
+      legend.title = element_text(size = 9, family="Arial"),
       panel.background = element_rect(fill = "transparent",
                                       colour = NA_character_), # necessary to avoid drawing panel outline
       panel.grid.major = element_blank(), # get rid of major grid
@@ -205,7 +208,7 @@ species_donut <- function(species_df, na_type, na_colours) { donut <- ggplot(spe
       legend.key = element_rect(fill = "transparent", color = NA),
       plot.margin = margin(b = 2.5, unit = "pt")
     ) +
-    annotate("text", x = 0.5, y = 0.5, label = na_type, size = 7, family = "DejaVu Serif")
+    annotate("text", x = 0.5, y = 0.5, label = na_type, size = 7, family = "Arial")
   return(donut)  
   }
 
