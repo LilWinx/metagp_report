@@ -17,6 +17,9 @@ library(patchwork)
 library(cowplot)
 library(extrafont)
 
+# load the fonts
+loadfonts()
+
 args <- commandArgs(trailingOnly = TRUE)
 wd <- args[1]
 #wd <- "~/Documents/R_workdir"
