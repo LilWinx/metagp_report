@@ -155,8 +155,8 @@ kingdom_donut <- function(kingdom_df, na_type) {
     theme(
       legend.position="bottom",
       legend.direction='vertical',
-      legend.text = element_text(size = 7, family = "sans"), 
-      legend.title = element_text(size = 9, family = "sans"),
+      legend.text = element_text(size = 7, family = "DejaVu Sans"), 
+      legend.title = element_text(size = 9, family = "DejaVu Sans"),
       panel.background = element_rect(fill = "transparent",
                                       colour = NA_character_),
       panel.grid.major = element_blank(),
@@ -192,8 +192,8 @@ species_donut <- function(species_df, na_type, na_colours) { donut <- ggplot(spe
   guides(fill = guide_legend(keywidth = 0.7, keyheight = 0.7)) +
   theme(
     legend.position="right", 
-      legend.text = element_text(size = 7, family = "sans"), 
-      legend.title = element_text(size = 9, family="sans"),
+      legend.text = element_text(size = 7, family = "DejaVu Sans"), 
+      legend.title = element_text(size = 9, family="DejaVu Sans"),
       panel.background = element_rect(fill = "transparent",
                                       colour = NA_character_), # necessary to avoid drawing panel outline
       panel.grid.major = element_blank(), # get rid of major grid
@@ -205,7 +205,7 @@ species_donut <- function(species_df, na_type, na_colours) { donut <- ggplot(spe
       legend.key = element_rect(fill = "transparent", color = NA),
       plot.margin = margin(b = 2.5, unit = "pt")
     ) +
-    annotate("text", x = 0.5, y = 0.5, label = na_type, size = 7, family = "sans")
+    annotate("text", x = 0.5, y = 0.5, label = na_type, size = 7, family = "DejaVu Sans")
   return(donut)  
   }
 
