@@ -155,8 +155,8 @@ kingdom_donut <- function(kingdom_df, na_type) {
     theme(
       legend.position="bottom",
       legend.direction='vertical',
-      legend.text = element_text(size = 7, family = "Arial"), 
-      legend.title = element_text(size = 9, family="Arial"),
+      legend.text = element_text(size = 7, family = "Sans"), 
+      legend.title = element_text(size = 9, family = "Sans"),
       panel.background = element_rect(fill = "transparent",
                                       colour = NA_character_),
       panel.grid.major = element_blank(),
@@ -190,21 +190,22 @@ species_donut <- function(species_df, na_type, na_colours) { donut <- ggplot(spe
   scale_fill_manual(values = setNames(na_colours, levels(species_df$species)), name = "Species") +
   theme_void() +
   guides(fill = guide_legend(keywidth = 0.7, keyheight = 0.7)) +
-  theme(legend.position="right", 
-        legend.text = element_text(size = 7, family = "Arial"), 
-        legend.title = element_text(size = 9, family="Arial"),
-        panel.background = element_rect(fill = "transparent",
-                                        colour = NA_character_), # necessary to avoid drawing panel outline
-        panel.grid.major = element_blank(), # get rid of major grid
-        panel.grid.minor = element_blank(), # get rid of minor grid
-        plot.background = element_rect(fill = "transparent",
-                                       colour = NA_character_), # necessary to avoid drawing plot outline
-        legend.background = element_rect(fill = "transparent", color = NA),
-        legend.box.background = element_rect(fill = "transparent", color = NA),
-        legend.key = element_rect(fill = "transparent", color = NA),
-        plot.margin = margin(b = 2.5, unit = "pt")
+  theme(
+    legend.position="right", 
+      legend.text = element_text(size = 7, family = "Sans"), 
+      legend.title = element_text(size = 9, family="Sans"),
+      panel.background = element_rect(fill = "transparent",
+                                      colour = NA_character_), # necessary to avoid drawing panel outline
+      panel.grid.major = element_blank(), # get rid of major grid
+      panel.grid.minor = element_blank(), # get rid of minor grid
+      plot.background = element_rect(fill = "transparent",
+                                     colour = NA_character_), # necessary to avoid drawing plot outline
+      legend.background = element_rect(fill = "transparent", color = NA),
+      legend.box.background = element_rect(fill = "transparent", color = NA),
+      legend.key = element_rect(fill = "transparent", color = NA),
+      plot.margin = margin(b = 2.5, unit = "pt")
     ) +
-    annotate("text", x = 0.5, y = 0.5, label = na_type, size = 7, family = "Arial")
+    annotate("text", x = 0.5, y = 0.5, label = na_type, size = 7, family = "Sans")
   return(donut)  
   }
 
