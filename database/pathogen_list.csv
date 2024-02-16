@@ -61,6 +61,7 @@ Campylobacter curvus,,,bacterial,Campylobacteriosis,200,NZ_CP053826.1,is a known
 Campylobacter fetus,,,bacterial,Campylobacteriosis,196,NZ_CP059443.1,is a known pathogen,,,1,1.0.0
 Campylobacter jejuni,,,bacterial,Campylobacteriosis,197,NC_002163.1,is a known pathogen,,Yes,1,1.0.0
 Campylobacter lari,,,bacterial,Campylobacteriosis,201,NC_012039.1,is a known pathogen,,,1,1.0.0
+Cardiobacterium hominis,,,bacterial,,,,is a known pathogen,Upper Respiratory Tract,,37,1.0.1
 Capnocytophaga canimorsus,,,bacterial,,,,is a known pathogen,,,3,1.0.0
 Chlamydia pneumoniae,,,bacterial,,83558,NC_005043.1,is a known pathogen,,,1,1.0.0
 Chlamydia psittaci,,,bacterial,Psittacosis (ornithosis),83554,NC_017287.1,is a known pathogen,,Yes,"1,2",1.0.0
@@ -101,6 +102,7 @@ Francisella tularensis,,,bacterial,Tularaemia,263,GCF_000833355.1,is a known pat
 Fusobacterium necrophorum,,,bacterial,Lemierre's syndrome,859,NZ_CP019306.1,is a known pathogen,,,1,1.0.0
 Fusobacterium nucleatum,,,bacterial,,851,NZ_CP028101.1,is a known pathogen,Oral Cavity,,1,1.0.0
 Gardnerella vaginalis,,,bacterial,bacterial Vaginosis,2702,GCF_002861965.1,is a known pathogen,Female Urogenital Tract,,1,1.0.0
+Gemella haemolysans,,,bacterial,,,GCF_900638055.1,is a known pathogen,Oral Cavity; Upper Respiratory Tract; Gastrointestinal Tract; Genitourinary Tract,,36,1.0.1
 Haemophilus aegyptius,,,bacterial,,197575,NZ_LS483429.1,is a known pathogen,,,1,1.0.0
 Haemophilus influenzae,,,bacterial,,727,NZ_CP007470.1,is a known pathogen,Upper Respiratory Tract,Yes (HIB),"1,2",1.0.0
 Haemophilus parainfluenzae,,,bacterial,,729,GCF_000191405.1,is a known pathogen,Oral Cavity; Upper Respiratory Tract,,1,1.0.0
@@ -746,3 +748,5 @@ unidentified human coronavirus,,,viral,,,,is a known pathogen,,,1,1.0.1
 33. Ilheus virus https://doi.org/10.3201%2Feid1803.111486,,,,,,,,,,,
 34. Acinetobacter junii https://doi.org/10.1016/j.eucr.2020.101209,,,,,,,,,,,
 35. SV40 ,,,,,,,,,,,
+36. Gemella haemolysans https://onlinelibrary.wiley.com/doi/10.1002/jgf2.497,,,,,,,,,,,
+37. Cardiobacterium hominis https://link.springer.com/article/10.1007/s10096-006-0189-9,,,,,,,,,,,
