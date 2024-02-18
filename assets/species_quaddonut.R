@@ -161,8 +161,8 @@ kingdom_donut <- function(kingdom_df, na_type) {
     theme(
       legend.position="bottom",
       legend.direction='vertical',
-      legend.text = element_text(size = 7, family = "Arial"), 
-      legend.title = element_text(size = 9, family = "Arial"),
+      legend.text = element_text(size = 7, family = "DejaVu Sans"), 
+      legend.title = element_text(size = 9, family = "DejaVu Sans"),
       panel.background = element_rect(fill = "transparent",
                                       colour = NA_character_),
       panel.grid.major = element_blank(),
@@ -198,8 +198,8 @@ species_donut <- function(species_df, na_type, na_colours) { donut <- ggplot(spe
   guides(fill = guide_legend(keywidth = 0.7, keyheight = 0.7)) +
   theme(
     legend.position="right", 
-      legend.text = element_text(size = 7, family = "Arial"), 
-      legend.title = element_text(size = 9, family="Arial"),
+      legend.text = element_text(size = 7, family = "DejaVu Sans"), 
+      legend.title = element_text(size = 9, family="DejaVu Sans"),
       panel.background = element_rect(fill = "transparent",
                                       colour = NA_character_), # necessary to avoid drawing panel outline
       panel.grid.major = element_blank(), # get rid of major grid
@@ -211,7 +211,7 @@ species_donut <- function(species_df, na_type, na_colours) { donut <- ggplot(spe
       legend.key = element_rect(fill = "transparent", color = NA),
       plot.margin = margin(b = 2.5, unit = "pt")
     ) +
-    annotate("text", x = 0.5, y = 0.5, label = na_type, size = 7, family = "Arial")
+    annotate("text", x = 0.5, y = 0.5, label = na_type, size = 7, family = "DejaVu Sans")
   return(donut)  
   }
 
@@ -233,10 +233,10 @@ species <- (rna_species_donut + theme(plot.margin = unit(c(0,0,0,0), "pt"))) / (
 p <- plot_grid(kingdom, NULL, species, ncol = 3, nrow = 1, rel_widths = c(1, -0.5, 4))
 
 ggsave(outname,
-       width = 1400,
+       width = 1450,
        height = 1400,
        units = "px",
        dpi = 300,
-       scale = 1.3,
+       scale = 1.2,
        bg = "transparent")
 
