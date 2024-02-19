@@ -25,7 +25,12 @@ def merge_dna_and_rna(found_list):
 
     dna_df['na_type'] = "DNA"
     rna_df['na_type'] = "RNA"
-
+    
     merged_df = pd.concat([dna_df, rna_df])
-    merged_df.reset_index(drop=True)
+    
+    if "krona" in dna_file:
+        merged_df = merged_df.groupby(['#queryID', '#taxID']).agg({'#score': 'mean', 'rpm_sample': 'mean'}).reset_index()
+    else:
+        merged_df.reset_index(drop=True)
     return merged_df
+

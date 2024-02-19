@@ -45,8 +45,15 @@ def main():
 
     na_type = None
     if args.natype == "both":
-        found_list = assists.check_na_files(args.input)
-        tpm_file = merge_natype.merge_dna_and_rna(found_list)
+        zscore_found_list = assists.check_na_files(args.input, "zscore")
+        krona_found_list = assists.check_na_files(args.input, "krona")
+        tpm_file = merge_natype.merge_dna_and_rna(zscore_found_list)
+        krona_file = merge_natype.merge_dna_and_rna(krona_found_list)
+        new_krona = args.input + "/merged_krona_input.tsv"
+        krona_file.to_csv(new_krona, sep = '\t', index=False)
+        krona_cmd = f"ktImportTaxonomy -m 4 -i {new_krona} -o {args.input}/merged-rpm-zscore.html"
+        assists.run_cmd(krona_cmd)
+
     elif args.natype == "dna":
         na_type == "DNA"
     elif args.natype == "rna":
@@ -123,12 +130,14 @@ def main():
                 db_accordion = zscore_top10.read_in_tpm(tpm_file, na_type)
             else:
                 db_accordion = zscore_top10.read_in_tpm(tpm_file, na_type)
-        elif file.endswith(".html"):
+        elif file.endswith("rpm-zscore.html"):
             iframe_krona = os.path.join(args.input, file)
+            if args.natype == "both":
+                iframe_krona = os.path.join(args.input, "merged-rpm-zscore.html")
             base64_krona = base64_encode.html_base64_encode(iframe_krona)
             div_krona_html = f'''
             <div data-html2canvas-ignore="true" class="krona">
-                <p style="padding-left: 10px;"><b>Figure {fig_no}:</b> Taxonomic Classification of raw sequencing reads.</p>
+                <p style="padding-left: 10px;"><b>Figure {fig_no}:</b> Taxonomic Classification of contigs and unassembled reads post-pipeline.</p>
                 <iframe src="data:text/html;base64,{base64_krona}">
                 </iframe>
             </div>
