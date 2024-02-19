@@ -2,6 +2,24 @@ import os
 import sys
 import logging
 import pandas as pd
+import subprocess
+
+def run_cmd(command):
+    """
+    Run commands with error outputs.
+    """
+    logging.info("Running command: %s", command)
+    result = subprocess.run(
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
+    )
+    result.stdout = result.stdout.decode()
+    result.stderr = result.stderr.decode()
+    if result.returncode != 0:
+        logging.critical("Failed to run command: %s", result.args)
+        logging.critical("stdout: %s", result.stdout)
+        logging.critical("stderr: %s", result.stderr)
+        sys.exit(1)
+    return result
 
 def check_files(file):
     """
@@ -45,7 +63,7 @@ def check_input_folder(folder):
         logging.critical(f"There more than the expected number of files in {folder}, please double check")
         sys.exit(1)
     for file in input_files:
-        if file.endswith((".html", ".txt", ".png", ".csv", ".cov_stats")):
+        if file.endswith((".html", ".txt", ".png", ".csv", ".cov_stats", ".tsv")):
             check_files(os.path.join(folder, file))
         else:
             logging.critical(f"Invalid file type detected please check or remove")
@@ -53,12 +71,22 @@ def check_input_folder(folder):
     return input_files
 
 def load_csv(file):
-    input_file = pd.read_csv(file)
+    if file.endswith(".csv"):
+        input_file = pd.read_csv(file)
+    elif file.endswith(".tsv"):
+        input_file = pd.read_csv(file, sep="\t")
+    else:
+        logging.error("Invalid file type, how did you even get to this point???")
     return input_file
 
-def check_na_files(folder):
+def check_na_files(folder, type):
     keywords = ['CzDna', 'CzRna']
-    file_extension = 'zscore.csv'
+    if type == "zscore":
+        file_extension = 'zscore.csv'
+    elif type == "krona":
+        file_extension = "krona.tsv"
+    else:
+        logging.info("No type specified.")
     found_files = []
     for root, dirs, files in os.walk(folder):
         for file in files:
@@ -66,7 +94,7 @@ def check_na_files(folder):
                 found_files.append(os.path.join(root, file))
 
     if len(found_files) == 2:
-        logging.info(f"Found both files")
+        logging.info(f"Found both {type} files")
     else:
         logging.error(f"Either you have extra files or are missing files")
     for file in found_files:
