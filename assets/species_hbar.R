@@ -55,10 +55,14 @@ sorted <- selected[order(selected$rpm_sample, decreasing = TRUE), ]
 sorted <- subset(sorted, !is.na(species) & species != "")
 sorted <- sorted %>%
   group_by(species) %>%
-  slice(which.max(zscore)) %>%
+  summarize(rpm_sample = sum(rpm_sample), zscore = max(zscore)) %>%
   ungroup()
-top_10 <- head(sorted, 10)
+sorted <- sorted[order(sorted$zscore, decreasing = TRUE), ]
+top_10 <- sorted %>%
+  filter(zscore > 50) %>%
+  head(10)
 top_10 <- top_10[, c("species", "rpm_sample")]
+
 top_10$percentage <- (top_10$rpm_sample / s_total_rpm) * 100
 top10_total_rpm <- sum(top_10$percentage)
 other_rpm <- 100 - top10_total_rpm # calculate other
@@ -75,17 +79,33 @@ kcolours <- c(
   '#c4c9cc'
 )
 
-colours <- c('#0079bf', 
-             '#70b500', 
-             '#ff9f1a', 
-             '#eb5a46', 
-             '#f2d600', 
-             '#c377e0', 
-             '#ff78cb', 
-             '#00c2e0', 
-             '#51e898',
-             '#bc9b6a',
-             '#c4c9cc')
+generate_colors <- function(n) {
+  if (n <= 0) {
+    return(c(Other = '#c4c9cc'))
+  } else if (n == 1) {
+    return(c('#0079bf', '#c4c9cc'))  # Return a default color when only one color is needed
+  } else {
+    colours <- c(
+      '#0079bf', 
+      '#70b500', 
+      '#ff9f1a', 
+      '#eb5a46', 
+      '#f2d600', 
+      '#c377e0', 
+      '#ff78cb', 
+      '#00c2e0', 
+      '#51e898',
+      '#bc9b6a'
+    )
+    if (n <= length(colours)) {
+      return(c(colours[1:n], Other = '#c4c9cc'))
+    } else {
+      dynamic_colors <- rainbow(n - 1)
+      return(c(dynamic_colors, Other = '#c4c9cc'))
+    }
+  }
+}
+
 
 species_freq <- table(new_species$species)
 sorted_species <- names(sort(species_freq, decreasing = TRUE))
@@ -94,6 +114,10 @@ new_species$species <- factor(new_species$species, levels = sorted_species)
 
 sorted <- mutate(new_species,
                  species = fct_infreq(new_species$species, w = new_species$percentage) |> fct_other(drop = "Other"))
+
+sorted_n <- nrow(sorted) - 1
+#hbar2_colours <- generate_colors(sorted_n) 
+hbar2_colours <- c("#0079bf","#c4c9cc")
 
 hbar1 <- ggplot(sum_df, aes(x = 2, y = percentage, fill=superkingdom)) +
   geom_col(width = 0.1) +
@@ -121,7 +145,7 @@ hbar2 <- ggplot(sorted, aes(x = 2, y = percentage, fill=species)) +
                 geom_col(width = 0.1) +
                 coord_flip() + 
                 scale_y_reverse() +
-                scale_fill_manual(values = colours, name = "Species") +
+                scale_fill_manual(values = hbar2_colours, name = "Species") +
                 theme_void() +
                 guides(fill = guide_legend(keywidth = 0.7, keyheight = 0.7)) +
                 theme(legend.position="bottom", 
