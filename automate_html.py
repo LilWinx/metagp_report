@@ -126,10 +126,14 @@ def main():
         elif file.endswith("zscore.csv"):
             if args.natype == "dna" or args.natype == "rna" and na_type != None:
                 tpm_file = os.path.join(args.input, file)
-                assists.load_csv(tpm_file)
+                tpm_df = assists.load_csv(tpm_file)
+                db_accordion = zscore_top10.read_in_tpm(tpm_df, na_type)
+            elif args.natype == "both":
                 db_accordion = zscore_top10.read_in_tpm(tpm_file, na_type)
             else:
-                db_accordion = zscore_top10.read_in_tpm(tpm_file, na_type)
+                tpm_file = os.path.join(args.input, file)
+                tpm_df = assists.load_csv(tpm_file)
+                db_accordion = zscore_top10.read_in_tpm(tpm_df, na_type)
         elif file.endswith("rpm-zscore.html"):
             iframe_krona = os.path.join(args.input, file)
             if args.natype == "both":

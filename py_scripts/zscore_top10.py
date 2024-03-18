@@ -15,7 +15,7 @@ def read_in_tpm(input_file, na_type):
     tpm_input = tpm_input[tpm_input['zscore'] > 1]
     tpm_input = tpm_input.sort_values(by=['zscore', 'rpm_sample',], ascending=[False, False]).dropna(subset='species').drop_duplicates(subset='species')
     top10only = top10only = tpm_input[tpm_input['zscore'] > 50].nlargest(10, 'zscore')['species'].reset_index(drop=True)
-    if na_type == "DNA" or na_type == "RNA":
+    if na_type == "DNA" or na_type == "RNA": 
         top10only['na_type'] == na_type
     else:
         pass
