@@ -17,7 +17,13 @@ args <- commandArgs(trailingOnly = TRUE)
 wd <- args[1]
 #wd <- "~/Documents/R_workdir"
 setwd(dir = wd)
-species <- read.csv("zscore.csv", header = 1)
+files <- list.files(directory, pattern = "_zscore\\.csv$", full.names = TRUE)
+if (length(files) == 1) {
+    # Assign the file path to a variable
+    species <- read.csv(files[1], header = 1)
+} else {
+    print("Error: No file or multiple files found with '_zscore.csv' ending.")
+}
 #outname <- "output_hbar.png"
 outname <- paste(args[2],"_hbar.png", sep = "")
 dbPath <- args[3]
