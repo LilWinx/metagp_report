@@ -17,7 +17,7 @@ args <- commandArgs(trailingOnly = TRUE)
 wd <- args[1]
 #wd <- "~/Documents/R_workdir"
 setwd(dir = wd)
-files <- list.files(directory, pattern = "_zscore\\.csv$", full.names = TRUE)
+files <- list.files(wd, pattern = "_zscore\\.csv$", full.names = TRUE)
 if (length(files) == 1) {
     # Assign the file path to a variable
     species <- read.csv(files[1], header = 1)
