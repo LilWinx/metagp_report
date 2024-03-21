@@ -104,10 +104,10 @@ generate_colors <- function(n) {
       '#bc9b6a'
     )
     if (n <= length(colours)) {
-      return(c(colours[1:n], Other = '#c4c9cc'))
+      return(c(colours[1:n], '#c4c9cc'))
     } else {
       dynamic_colors <- rainbow(n - 1)
-      return(c(dynamic_colors, Other = '#c4c9cc'))
+      return(c(dynamic_colors, '#c4c9cc'))
     }
   }
 }
@@ -122,8 +122,8 @@ sorted <- mutate(new_species,
                  species = fct_infreq(new_species$species, w = new_species$percentage) |> fct_other(drop = "Other"))
 
 sorted_n <- nrow(sorted) - 1
-#hbar2_colours <- generate_colors(sorted_n) 
-hbar2_colours <- c("#0079bf","#c4c9cc")
+hbar2_colours <- generate_colors(sorted_n) 
+#hbar2_colours <- c("#0079bf","#c4c9cc")
 
 hbar1 <- ggplot(sum_df, aes(x = 2, y = percentage, fill=superkingdom)) +
   geom_col(width = 0.1) +
