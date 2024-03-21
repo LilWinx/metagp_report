@@ -55,11 +55,11 @@ def main():
         assists.run_cmd(krona_cmd)
 
     elif args.natype == "dna":
-        na_type == "DNA"
+        na_type = "DNA"
     elif args.natype == "rna":
-        na_type == "RNA"
+        na_type = "RNA"
     else:
-        na_type == None
+        na_type = None
 
     coverage_png = None
     div_base64_cov_png = ""
