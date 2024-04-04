@@ -582,7 +582,7 @@ Human coronavirus NL63,,,viral,,,NC_005831.2,is a known pathogen,,,,1.0.0
 Human coronavirus OC43,,,viral,,,KU131570.1,is a known pathogen,,,,1.0.0
 Human gammaherpesvirus 4,Epstein Barr Virus,,viral,,10376,NC_009334.1,is a known pathogen (Oncovirus),,,1,1.0.0
 Human gammaherpesvirus 8,Kaposi's sarcoma-associated herpesvirus,,viral,,37296,NC_009333.1,is a known pathogen (Oncovirus),,,1,1.0.0
-Human immunodeficiency virus,,,viral,,12721,NC_001802.1,is a known pathogen,,Yes,"1,2",1.0.0
+Human immunodeficiency virus,Human immunodeficiency virus 1,,viral,,12721,NC_001802.1,is a known pathogen,,Yes,"1,2",1.0.0
 Human mastadenovirus A,,,viral,,,,is a known pathogen,,,1,1.0.1
 Human mastadenovirus B,,,viral,,,,is a known pathogen,,,1,1.0.1
 Human mastadenovirus C,,,viral,,,,is a known pathogen,,,1,1.0.1
