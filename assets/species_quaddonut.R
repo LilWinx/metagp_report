@@ -44,6 +44,14 @@ parasite_db_path <- paste(dbPath,"/parasites.txt", sep = "")
 parasite_db <- read.csv(parasite_db_path, header = 1, sep = "\t")
 parasite_species <- parasite_db$X.Organism.Name
 
+klist <- c(
+  "Archaea",
+  "Bacteria",
+  "Eukaryota",
+  "Viruses",
+  "Other"
+)
+
 # pre-processing for first hbar
 kingdom_process <- function(species) {
   filt_kingdom <- species[, c("superkingdom", "rpm_sample")] # get kingdom and rpm
@@ -51,7 +59,14 @@ kingdom_process <- function(species) {
   filt_kingdom$superkingdom <- ifelse(filt_kingdom$superkingdom == "", "Other", filt_kingdom$superkingdom)
   sum_df <- aggregate(rpm_sample ~ superkingdom, data = filt_kingdom, FUN = sum)
   sum_df$percentage <- (sum_df$rpm_sample / k_total_rpm) * 100
-
+  
+  existing_kingdoms <- unique(sum_df$superkingdom)
+  missing_kingdoms <- setdiff(klist, existing_kingdoms)
+  if (length(missing_kingdoms) > 0) {
+    missing_rows <- data.frame(superkingdom = missing_kingdoms, rpm_sample = 0, percentage = 0)
+    sum_df <- rbind(sum_df, missing_rows)
+  }
+  
   kingdom_freq <- table(sum_df$superkingdom)
   sorted_kingdom <- names(sort(kingdom_freq, decreasing = TRUE))
   sorted_kingdom <- c(sorted_kingdom[sorted_kingdom != "Other"], "Other")
@@ -104,13 +119,8 @@ kcolours <- c(
   Other = '#c4c9cc'
 )
 
-klist <- c(
-  "Archaea",
-  "Bacteria",
-  "Eukaryota",
-  "Viruses",
-  "Other"
-)
+
+
 colours <- c('#0079bf', 
              '#70b500', 
              '#ff9f1a', 
@@ -155,7 +165,7 @@ kingdom_donut <- function(kingdom_df, na_type) {
     geom_col() +
     coord_polar(theta = "y") +
     xlim(c(0.5, 2.5)) +
-    scale_fill_manual(values = kcolours, name = "Kingdom", breaks = klist, limits = klist) +
+    scale_fill_manual(values = kcolours, name = "Kingdom", limits = klist, drop = FALSE) +
     theme_void() +
     guides(fill = guide_legend(keywidth = 0.7, keyheight = 0.7)) + 
     theme(
