@@ -83,7 +83,10 @@ def clinican_results(file, wgsid):
     filt_pt.reset_index(drop=True, inplace=True) # reset the index
     combined_pt = pd.concat([pt_data, filt_pt], axis = 1) # recombine the two dataframes
     combined_pt['pn'] = combined_pt['first_name'] + ' ' + combined_pt['last_name'] # combine first and last name for patient name
-    combined_pt['dobage'] = combined_pt['dob'] + ' (' + str(combined_pt['age'][0]) + " y/o)" # combine dob & age
+    if pd.notna(combined_pt['dob'][0]) or pd.notna(combined_pt['age'][0]):
+        combined_pt['dobage'] = combined_pt['dob'] + ' (' + str(combined_pt['age'][0]) + " y/o)" # combine dob & age
+    else:
+         combined_pt['dobage'] = "-"
     combined_pt['rep_gen_date'] = datetime.datetime.now().strftime("%y/%m/%d %I:%M:%S")
     #MAP TIME
     map_dict = {'na_type': na_type_dict, 
