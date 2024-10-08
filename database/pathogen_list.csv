@@ -159,7 +159,7 @@ Mycoplasma fermentans,,,bacterial,,,,is a known pathogen,,,1,1.0.1
 Mycoplasma genitalium,,,bacterial,,2097,,is a known pathogen,,,1,1.0.0
 Mycoplasma hominis,,,bacterial,,2098,,is a known pathogen,Lower Urogenital Tract,,1,1.0.0
 Mycoplasma penetrans,,,bacterial,,,,is a known pathogen,,,1,1.0.1
-Mycoplasma pneumoniae,,,bacterial,,2104,,is a known pathogen,,,1,1.0.0
+Mycoplasma pneumoniae,Mycoplasmoides pneumoniae,,bacterial,,2104,,is a known pathogen,,,1,1.0.0
 Mycoplasma salivarium,,,bacterial,,2124,,is a known pathogen,Oral Cavity,,1,1.0.0
 Neisseria gonorrhoeae,,,bacterial,Gonorrhoea,485,,is a known pathogen,,Yes,"1,2",1.0.0
 Neisseria meningitidis,,,bacterial,Meningococcal disease,487,,is a known pathogen,Upper Respiratory Tract,Yes,"1,2",1.0.0
@@ -593,12 +593,12 @@ Human orthopneumovirus,Respiratory Syncytial Virus,,viral,,11250,NC_001803.1,is 
 Human orthorubulavirus 2,,,viral,,,,is a known pathogen,,,1,1.0.1
 Human orthorubulavirus 4,,,viral,,,,is a known pathogen,,,1,1.0.1
 Human parainfluenzavirus,,,viral,,,,is a known pathogen,,,,1.0.0
-Human polyomavirus 1,,,viral,,1891762,,is a known pathogen,,,1,1.0.0
-Human polyomavirus 10,,,viral,,,,is a known pathogen,,,1,1.0.1
-Human polyomavirus 2,John Cunningham virus,,viral,Progressive multifocal leukoencephalopathy,1891763,,is a known pathogen,,,1,1.0.0
-Human polyomavirus 3,,,viral,,1891764,,is a known pathogen,,,1,1.0.0
-Human polyomavirus 4,,,viral,,1891765,,is a known pathogen,,,1,1.0.0
-Human polyomavirus 5,,,viral,,493803,NC_004108.1 (L); NC_004109.1 (M); NC_004110.1 (S),is a known pathogen (Oncovirus),,,1,1.0.0
+Human polyomavirus 1,BK polyomavirus; Betapolyomavirus hominis,,viral,,1891762,,is a known pathogen,,,1,1.0.0
+Human polyomavirus 10,MW polyomavirus; Deltapolyomavirus decihominis,,viral,,,,is a known pathogen,,,1,1.0.1
+Human polyomavirus 2,John Cunningham virus; JC polyomavirus; Betapolyomavirus secuhominis,,viral,Progressive multifocal leukoencephalopathy,1891763,,is a known pathogen,,,1,1.0.0
+Human polyomavirus 3,KI polyomavirus; Betapolyomavirus tertihominis,,viral,,1891764,,is a known pathogen,,,1,1.0.0
+Human polyomavirus 4,WU polyomavirus; Betapolyomavirus quartihominis,,viral,,1891765,,is a known pathogen,,,1,1.0.0
+Human polyomavirus 5,Merkel Cell Polyomavirus; Alphapolyomavirus quintihominis,,viral,,493803,NC_004108.1 (L); NC_004109.1 (M); NC_004110.1 (S),is a known pathogen (Oncovirus),,,1,1.0.0
 Human polyomavirus 8,Trichodysplasia spinulosa polyomavirus,,viral,Trichodysplasia spinulosa,1891727,,has been reported in case reports,,,12,1.0.0
 Human respirovirus 1,,,viral,,12730,,is a known pathogen,,,1,1.0.0
 Human respirovirus 3,,,viral,,11216,,is a known pathogen,,,1,1.0.0

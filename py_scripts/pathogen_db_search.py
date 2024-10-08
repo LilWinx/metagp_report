@@ -18,8 +18,8 @@ def pathogen_search(species_list, dk_status):
         species_list += ['-'] * (10 - len(species_list))
     
     for i, species in enumerate(species_list, start = 1):
-        match_species = pathogen_db[(pathogen_db['Species'] == species) | (pathogen_db['AltNames'] == species)]
-        contam_species = contam_db[(contam_db['Species'] == species)]
+        match_species = pathogen_db[(pathogen_db['Species'].str.lower() == species.lower()) | (pathogen_db['AltNames'].str.lower() == species.lower())]
+        contam_species = contam_db[(contam_db['Species'] == species.lower())]
         if not contam_species.empty:
             
             species = f"{species}"
